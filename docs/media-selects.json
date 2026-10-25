@@ -1,0 +1,38 @@
+{
+  "source": "Google Drive folder 1AMDJ3L2gukxPG6XQyAkZZUkptUCUcDxH (Instagram exports)",
+  "notes": "Timecodes are seconds into the source reel and mark segments free of burned-in promo text. cropBottom = fraction of frame height to crop (watermark/disclaimer).",
+  "video": [
+    { "id": "DY-6dpRiUpm", "driveId": "1Nq6KcX3SeR9KG_25rzSf0PYYC7fKYpl3", "res": "720x1280", "clean": [[0, 12.0]], "subject": "Slow carving of picanha on skewer, dark moody", "use": ["hero-loop", "cut:picanha"], "tier": "A" },
+    { "id": "DeQCzqKjEYo", "driveId": "1MdEF4v2cxtdPualr7zDnqlFSh_VwLx6i", "res": "720x1280", "clean": [[0, 10.0]], "subject": "Embers, open flame, carving, rotisserie, salting T-bone (6-8s), tomahawk on skewer (8-10s)", "use": ["hero-intro", "cut:tomahawk", "cut:t-bone"], "tier": "A" },
+    { "id": "DeAzCNYFRUk", "driveId": "1TZu5U6Bp1__c98dEZQwR9kPBJtgfCjHD", "res": "720x1280", "clean": [[0, 7.0], [7.0, 12.0], [12.0, 17.0]], "subject": "Picanha: cut, fold, skewer / over coals / carving at table", "use": ["ritual:select", "ritual:fire"], "tier": "A" },
+    { "id": "DeE3u4JjtdU", "driveId": "1C9sxzyN86PeW_2YP-oI1qi_0KZ0kdWJd", "res": "720x1280", "clean": [[0, 5.0], [5.0, 13.0], [13.0, 15.0]], "subject": "Spiral skewer reveal / knife through medium-rare / gaucho salting medallions", "use": ["ritual:cut", "cuts-conveyor"], "tier": "A" },
+    { "id": "DdtoJ_PickS", "driveId": "1jstxuu4-KFx0MulBvqTB29sQZrriI0uh", "res": "720x1280", "clean": [[0, 28.0]], "subject": "Butchery and carving, ribeye sliced on salt block", "use": ["cut:bife-ancho", "ritual-alt"], "tier": "A" },
+    { "id": "Dcj68SwkZW6", "driveId": "1q1WiPg3KCACCb7h-Iz7yYGX_rzS5q7Rs", "res": "720x1280", "clean": [[0, 7.0], [7.0, 12.0], [12.0, 13.5]], "subject": "Grill wall + raw ribeye + sear / gaucho tableside service with guests / daytime facade", "use": ["card-chapter-bg", "visit"], "tier": "A" },
+    { "id": "DcWhDYEF_f5", "driveId": "199kIeAu1Sz9xDrUsEPPwhB0CElSjl6KB", "res": "720x1280", "clean": [[0, 19.0]], "subject": "Night exterior (0-1s), market table, table service, steak boards, overhead market table w/ chandeliers (13-17s)", "use": ["market-table", "visit"], "tier": "A" },
+    { "id": "Deo96S8jVLk", "driveId": "1XVcPFfuzxf3V8jVvfzUO7WQBzOd-DnBm", "res": "720x1280", "clean": [[5.0, 14.0]], "subject": "Spark burst over grill (5-8s), gaucho skewer, carving", "use": ["ritual:fire"], "tier": "B" },
+    { "id": "Dc19SNXgZ1D", "driveId": "1H-NdTRe44A3IpGjc7v9QjSf7KRFmv7qM", "res": "720x1280", "clean": [[0, 5.0], [6.5, 9.0], [15.0, 17.0]], "subject": "Steak with chimichurri; chimichurri pour 6.5-9s. Avoid 9-15s (price menu in frame)", "use": ["menu", "cuts-conveyor"], "tier": "B" },
+    { "id": "DYYTPUlCoAw", "driveId": "1hjv9KXKbuWrshDrmvgntXEpKp9J7dTRj", "res": "720x1280", "clean": [[0, 1.0], [3.0, 5.0], [8.0, 10.0], [10.0, 11.0], [11.0, 12.7]], "cropBottom": 0.08, "subject": "Ice+lime / red pour / spritz / torch / night exterior", "use": ["bar"], "tier": "B" },
+    { "id": "Dc6ZmU7G3P0", "driveId": "15ny_-fyyHiotAKOgXvuaENo6P0JHLw8G", "res": "720x1280", "clean": [[0, 5.2]], "subject": "Rotisserie ribs/costela, board carving", "use": ["cut:costela"], "tier": "B" },
+    { "id": "DcoucvQFaI0", "driveId": "1gOV1oAj3KdyhqNqCvQN4PyLKvZG0ZrSx", "res": "720x1280", "clean": [[0, 9.0]], "subject": "Market table plating, 25fps", "use": ["market-table-backup"], "tier": "C" }
+  ],
+  "photo": [
+    { "id": "DcKEsvxCUBc_02", "driveId": "16LLn6fVsvqjebTZuoj4MnVu-sErverCH", "res": "1080x1350", "subject": "Meats on skewers over the fire", "use": ["ritual", "og-image"], "tier": "A", "cropBottom": 0.12 },
+    { "id": "DcKEsvxCUBc_03", "driveId": "19kCAYHYjhCm6VgKEKoBvvwXu3z7ezhz9", "res": "1080x1350", "subject": "Gaucho carving tableside", "use": ["card-chapter"], "tier": "A", "cropBottom": 0.12 },
+    { "id": "DcKEsvxCUBc_01", "driveId": "1H_CB7sjJlaHNleviUs8yJdpCLB6KnlTu", "res": "1080x1350", "subject": "Salting picanha on skewers", "use": ["ritual"], "tier": "A", "cropBottom": 0.12 },
+    { "id": "DcB97a-jNUr_01", "driveId": "10YfGm0FtsWK3y3_Gi4rsb0wCwwSDdkWs", "res": "1080x1350", "subject": "Overhead Market Table with gold fringe chandeliers", "use": ["market-table-hero"], "tier": "A", "cropBottom": 0.12 },
+    { "id": "DdZJbB1nJlh_01", "driveId": "1LQSyVBX4_pWIMfsfbg8uEnbMb7TtYXco", "res": "1080x1080", "subject": "Overhead Market Table, alternate angle, no watermark", "use": ["market-table-hero-alt"], "tier": "A" },
+    { "id": "DdZJbB1nJlh_04", "driveId": "1UOMbLs_xc-p3AKwGl7KsJTrjDSxGAmoQ", "res": "1080x1080", "subject": "Orange rose on watermelon", "use": ["market-table-detail"], "tier": "A" },
+    { "id": "DdZJbB1nJlh_05", "driveId": "1OGCsHHhV2RfgvWavcPPpFptHZFMKPuxs", "res": "1080x1080", "subject": "Fresh figs macro", "use": ["market-table-detail"], "tier": "A" },
+    { "id": "DcB97a-jNUr_02", "driveId": "1gSJWJIZtHHookZnaGXOlp4DFxkN6gYUF", "res": "1080x1350", "subject": "Honey, jams and nuts station", "use": ["market-table-detail"], "tier": "B", "cropBottom": 0.12 },
+    { "id": "Db_z-hmCRkf_03", "driveId": "1yHjQC-wUTojJpnJYyx2ChGVxdDWTvc5I", "res": "1080x1350", "subject": "Sliced steak with chimichurri, macro", "use": ["menu"], "tier": "A", "cropBottom": 0.12 },
+    { "id": "Db_z-hmCRkf_01", "driveId": "15cubjvpOnPm_gBT2NADRJWpJFmMScxba", "res": "1080x1350", "subject": "Steak board with sauces, top-down", "use": ["menu"], "tier": "B", "cropBottom": 0.12 },
+    { "id": "DYm3gq2mlNt_02", "driveId": "1DORpY8ZAzTC1QWNBIOWOGdRk8UhEn5LA", "res": "1080x1350", "subject": "Honey pour over grilled cheese", "use": ["market-table-detail"], "tier": "B" },
+    { "id": "DcOjaOcHGlm_02", "driveId": "1bIT8uDUzTbwYqwccVf_SaJA9aaMBCp4f", "res": "1080x1350", "subject": "Ceviche with crisps", "use": ["market-table-detail"], "tier": "B", "cropBottom": 0.12 },
+    { "id": "DcOjaOcHGlm_03", "driveId": "1rPwLKyJu5yX3cbk68TftWYNg5MfaFF6m", "res": "1080x1350", "subject": "Ceviche top-down on board", "use": ["menu"], "tier": "C", "cropBottom": 0.12 },
+    { "id": "DcEIcPsnBzX_04", "driveId": "1NQXsENEwURPXmSwwSH5shnWDnzFohDVr", "res": "1080x1350", "subject": "Charcuterie board with wine and chopp", "use": ["bar"], "tier": "B", "cropBottom": 0.12 },
+    { "id": "Dej3hP_jmYp_03", "driveId": "1jDolbksDUJBgpeW8Vnl_c6ix4mBRYqyp", "res": "640x800", "subject": "Green/red service cards (graphic overlay)", "use": ["reference-only:card-design"], "tier": "ref" }
+  ],
+  "unavailable": [
+    { "id": "Dbb3VDgpCRb", "driveId": "143vVXDxP7BdrB1_bF-qbJhEhy9JXuxzC", "reason": "6.7 MB exceeds Drive connector transfer limit; not reviewed" }
+  ]
+}

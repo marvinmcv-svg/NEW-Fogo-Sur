@@ -1,7 +1,7 @@
 import { Fragment, type ElementType } from 'react'
 
 type Props = {
-  text: string
+  text?: string | null
   as?: ElementType
   className?: string
   lines?: string[]
@@ -12,7 +12,8 @@ type Props = {
 // Server-friendly split: renders each character in its own span so CSS can
 // stagger them. Screen readers get the plain text via aria-label.
 export function SplitText({ text, as: Tag = 'h2', className, lines, delay = 0, reveal = true }: Props) {
-  const rows = lines && lines.length ? lines : [text]
+  // Content can be empty while an editor is still filling a page in.
+  const rows = (lines && lines.length ? lines : [text ?? '']).filter((r): r is string => typeof r === 'string')
   let index = 0
   return (
     <Tag

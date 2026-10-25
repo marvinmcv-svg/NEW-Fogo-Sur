@@ -4,7 +4,7 @@ import { EmberField } from '../motion/EmberField'
 import { splitLines } from '../../lib/format'
 import { asMedia, isVideo, mediaUrl, posterUrl, type MediaRef } from '../../lib/media'
 
-export function PageHeader({ eyebrow, title, intro, media }: { eyebrow?: string | null; title: string; intro?: string | null; media?: MediaRef }) {
+export function PageHeader({ eyebrow, title, intro, media }: { eyebrow?: string | null; title?: string | null; intro?: string | null; media?: MediaRef }) {
   const m = asMedia(media)
   return (
     <header className={`page-head ${m ? '' : 'page-head--plain'}`}>

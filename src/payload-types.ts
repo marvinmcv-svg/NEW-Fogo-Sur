@@ -260,6 +260,7 @@ export interface Media {
    * Se muestra mientras el video carga y cuando el visitante prefiere menos movimiento.
    */
   poster?: (number | null) | Media;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -746,6 +747,7 @@ export interface EventPackagesSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   poster?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

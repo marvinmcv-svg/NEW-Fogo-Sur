@@ -60,7 +60,8 @@ project `fogo-de-chao-ventura-sur` (`sa-east-1`), Blob store `fogo-ventura-sur-m
 
 - Every push to the default branch deploys to production. The build runs `payload migrate` first
   (`npm run vercel-build`), so schema changes ship as migrations: after changing collections run
-  `DATABASE_URI=postgres://x@127.0.0.1/x DATABASE_SCHEMA=payload npm run migrate:create <name>` and commit
+  `DATABASE_URI=postgres://x@127.0.0.1/x DATABASE_SCHEMA=payload BLOB_READ_WRITE_TOKEN=vercel_blob_rw_placeholder npm run migrate:create <name>`
+  (the Blob token placeholder matters: the storage plugin adds a column only when it is enabled) and commit
   `src/migrations`.
 - Env vars (Vercel → Settings → Environment Variables): `DATABASE_URI` (Supabase **IPv4 pooler**,
   role `payload`), `DATABASE_SCHEMA=payload`, `PAYLOAD_SECRET`, `BLOB_READ_WRITE_TOKEN` (added by the

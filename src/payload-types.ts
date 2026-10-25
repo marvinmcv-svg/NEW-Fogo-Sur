@@ -74,6 +74,7 @@ export interface Config {
     promotions: Promotion;
     'event-packages': EventPackage;
     media: Media;
+    'reservation-requests': ReservationRequest;
     inquiries: Inquiry;
     users: User;
     'payload-kv': PayloadKv;
@@ -90,6 +91,7 @@ export interface Config {
     promotions: PromotionsSelect<false> | PromotionsSelect<true>;
     'event-packages': EventPackagesSelect<false> | EventPackagesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    'reservation-requests': ReservationRequestsSelect<false> | ReservationRequestsSelect<true>;
     inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -421,6 +423,22 @@ export interface EventPackage {
   createdAt: string;
 }
 /**
+ * Cada vez que un cliente envía el formulario de reserva a WhatsApp se registra aquí (sin datos personales).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reservation-requests".
+ */
+export interface ReservationRequest {
+  id: number;
+  date: string;
+  time?: string | null;
+  guests: number;
+  occasion?: string | null;
+  locale?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "inquiries".
  */
@@ -520,6 +538,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'reservation-requests';
+        value: number | ReservationRequest;
       } | null)
     | ({
         relationTo: 'inquiries';
@@ -793,6 +815,19 @@ export interface MediaSelect<T extends boolean = true> {
               filename?: T;
             };
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reservation-requests_select".
+ */
+export interface ReservationRequestsSelect<T extends boolean = true> {
+  date?: T;
+  time?: T;
+  guests?: T;
+  occasion?: T;
+  locale?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

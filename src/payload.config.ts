@@ -21,6 +21,7 @@ import { MenuCategories } from './collections/MenuCategories'
 import { MenuItems } from './collections/MenuItems'
 import { Pages } from './collections/Pages'
 import { Promotions } from './collections/Promotions'
+import { ReservationRequests } from './collections/ReservationRequests'
 import { Users } from './collections/Users'
 import { Home } from './globals/Home'
 import { Navigation } from './globals/Navigation'
@@ -57,7 +58,12 @@ export default buildConfig({
     importMap: { baseDir: path.resolve(dirname) },
     meta: { titleSuffix: ' · Fogo de Chão Admin' },
     avatar: 'default',
+    // The brand is fire on charcoal: the panel stays dark (see custom.scss).
+    theme: 'dark',
     components: {
+      views: {
+        dashboard: { Component: '/components/admin/Dashboard' },
+      },
       graphics: {
         Logo: '/components/admin/Logo',
         Icon: '/components/admin/Icon',
@@ -80,7 +86,7 @@ export default buildConfig({
     defaultLocale,
     fallback: true,
   },
-  collections: [Pages, Cuts, MenuCategories, MenuItems, Promotions, EventPackages, Media, Inquiries, Users],
+  collections: [Pages, Cuts, MenuCategories, MenuItems, Promotions, EventPackages, Media, ReservationRequests, Inquiries, Users],
   globals: [Home, MenuPage, CutsPage, WeekPage, EventsPage, VisitPage, ReservePage, Settings, Navigation],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || 'dev-only-secret-change-me',

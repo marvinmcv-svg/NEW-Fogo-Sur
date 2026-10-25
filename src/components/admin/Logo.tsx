@@ -1,13 +1,11 @@
-// Admin login / header branding.
+// Admin login branding: the wordmark over an ember glow.
 export default function Logo() {
   return (
-    <div style={{ textAlign: 'center', fontFamily: 'Georgia, "Times New Roman", serif' }}>
-      <div style={{ fontSize: 34, letterSpacing: '0.08em', lineHeight: 1 }}>
-        FOGO <span style={{ fontSize: '0.6em', fontStyle: 'italic' }}>de</span> CHÃO
+    <div className="fd-logo">
+      <div className="fd-logo__mark">
+        FOGO <span>de</span> CHÃO
       </div>
-      <div style={{ marginTop: 10, fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', opacity: 0.6, fontFamily: 'system-ui, sans-serif' }}>
-        Ventura Sur · Panel
-      </div>
+      <div className="fd-logo__sub">Ventura Sur · Panel</div>
     </div>
   )
 }

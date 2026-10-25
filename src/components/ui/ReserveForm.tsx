@@ -15,7 +15,8 @@ const todayISO = () => {
 }
 
 // Builds the WhatsApp message live (shown as a chat bubble) and opens
-// wa.me with it. No data is stored on our side.
+// wa.me with it. Only the anonymous shape of the request (date, time, party
+// size, occasion) is logged for the admin dashboard; no name or notes.
 export function ReserveForm({
   labels,
   occasions,
@@ -59,6 +60,12 @@ export function ReserveForm({
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault()
+    void fetch('/api/reservation-requests', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date, time, guests, occasion: occasion || undefined, locale }),
+      keepalive: true,
+    }).catch(() => {})
     window.open(whatsappLink(whatsapp, message), '_blank', 'noopener,noreferrer')
   }
 

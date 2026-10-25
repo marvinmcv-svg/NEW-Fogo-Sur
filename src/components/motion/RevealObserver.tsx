@@ -10,12 +10,16 @@ export function RevealObserver() {
   const pathname = usePathname()
 
   useEffect(() => {
+    const timers: number[] = []
     const io = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            entry.target.classList.add('is-in')
-            io.unobserve(entry.target)
+            const el = entry.target
+            el.classList.add('is-in')
+            io.unobserve(el)
+            // Slices drop their mask once the wipe has finished (see styles.css).
+            if (el.getAttribute('data-reveal') === 'slice') timers.push(window.setTimeout(() => el.classList.add('is-settled'), 1900))
           }
         }
       },
@@ -28,6 +32,7 @@ export function RevealObserver() {
     const mo = new MutationObserver(observeAll)
     mo.observe(document.body, { childList: true, subtree: true })
     return () => {
+      timers.forEach(clearTimeout)
       io.disconnect()
       mo.disconnect()
     }

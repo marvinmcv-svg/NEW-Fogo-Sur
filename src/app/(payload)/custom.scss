@@ -1,0 +1,451 @@
+// Fogo de Chão admin: the panel wears the site's brand (charcoal, ember,
+// gold, bone; Cormorant Garamond + Manrope). Payload's own styles live in the
+// `payload-default` layer, so these unlayered rules win without !important.
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap');
+
+// ---------- brand tokens (Payload ramps re-pointed to the brand) ----------
+:root {
+  --fogo-charcoal: #0e0b09;
+  --fogo-ember: #e2571e;
+  --fogo-gold: #c9a24a;
+  --fogo-amber: #d98a2b;
+  --fogo-bone: #efe6d8;
+  --fogo-yes: #3e9b57;
+  --fogo-no: #c8433b;
+  --fogo-line: rgba(239, 230, 216, 0.09);
+  --fogo-line-strong: rgba(239, 230, 216, 0.16);
+  --fogo-display: 'Cormorant Garamond', 'Times New Roman', serif;
+  --font-body: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-serif: var(--fogo-display);
+
+  --color-base-0: rgb(251, 247, 240);
+  --color-base-50: rgb(245, 238, 228);
+  --color-base-100: rgb(239, 230, 216);
+  --color-base-150: rgb(227, 217, 202);
+  --color-base-200: rgb(215, 204, 188);
+  --color-base-250: rgb(203, 191, 175);
+  --color-base-300: rgb(191, 178, 161);
+  --color-base-350: rgb(174, 160, 144);
+  --color-base-400: rgb(156, 143, 128);
+  --color-base-450: rgb(139, 126, 111);
+  --color-base-500: rgb(122, 108, 94);
+  --color-base-550: rgb(107, 94, 81);
+  --color-base-600: rgb(92, 79, 68);
+  --color-base-650: rgb(76, 64, 54);
+  --color-base-700: rgb(61, 50, 41);
+  --color-base-750: rgb(48, 39, 32);
+  --color-base-800: rgb(36, 28, 23);
+  --color-base-850: rgb(26, 20, 17);
+  --color-base-900: rgb(18, 14, 11);
+  --color-base-950: rgb(11, 9, 7);
+  --color-base-1000: rgb(6, 5, 4);
+
+  --color-success-50: rgb(241, 242, 232);
+  --color-success-100: rgb(221, 232, 216);
+  --color-success-150: rgb(201, 223, 200);
+  --color-success-200: rgb(181, 213, 184);
+  --color-success-250: rgb(161, 203, 168);
+  --color-success-300: rgb(142, 194, 151);
+  --color-success-350: rgb(122, 184, 135);
+  --color-success-400: rgb(102, 174, 119);
+  --color-success-450: rgb(82, 165, 103);
+  --color-success-500: rgb(62, 155, 87);
+  --color-success-550: rgb(57, 140, 79);
+  --color-success-600: rgb(52, 125, 71);
+  --color-success-650: rgb(47, 110, 63);
+  --color-success-700: rgb(42, 95, 54);
+  --color-success-750: rgb(37, 80, 46);
+  --color-success-800: rgb(32, 65, 38);
+  --color-success-850: rgb(27, 50, 30);
+  --color-success-900: rgb(22, 35, 22);
+  --color-success-950: rgb(17, 20, 14);
+
+  --color-error-50: rgb(248, 238, 230);
+  --color-error-100: rgb(243, 219, 211);
+  --color-error-150: rgb(238, 200, 192);
+  --color-error-200: rgb(232, 181, 173);
+  --color-error-250: rgb(227, 162, 154);
+  --color-error-300: rgb(221, 143, 135);
+  --color-error-350: rgb(216, 124, 116);
+  --color-error-400: rgb(211, 105, 97);
+  --color-error-450: rgb(205, 86, 78);
+  --color-error-500: rgb(200, 67, 59);
+  --color-error-550: rgb(181, 61, 54);
+  --color-error-600: rgb(161, 55, 49);
+  --color-error-650: rgb(142, 50, 43);
+  --color-error-700: rgb(122, 44, 38);
+  --color-error-750: rgb(103, 38, 33);
+  --color-error-800: rgb(84, 32, 28);
+  --color-error-850: rgb(64, 26, 23);
+  --color-error-900: rgb(45, 20, 17);
+  --color-error-950: rgb(26, 14, 12);
+
+  --color-warning-50: rgb(250, 239, 229);
+  --color-warning-100: rgb(247, 222, 207);
+  --color-warning-150: rgb(244, 205, 185);
+  --color-warning-200: rgb(242, 188, 163);
+  --color-warning-250: rgb(239, 171, 141);
+  --color-warning-300: rgb(237, 154, 118);
+  --color-warning-350: rgb(234, 138, 96);
+  --color-warning-400: rgb(231, 121, 74);
+  --color-warning-450: rgb(229, 104, 52);
+  --color-warning-500: rgb(226, 87, 30);
+  --color-warning-550: rgb(204, 79, 28);
+  --color-warning-600: rgb(182, 71, 26);
+  --color-warning-650: rgb(160, 63, 23);
+  --color-warning-700: rgb(138, 55, 21);
+  --color-warning-750: rgb(116, 47, 19);
+  --color-warning-800: rgb(94, 40, 17);
+  --color-warning-850: rgb(71, 32, 15);
+  --color-warning-900: rgb(49, 24, 12);
+  --color-warning-950: rgb(27, 16, 10);
+
+  --color-blue-50: rgb(248, 243, 231);
+  --color-blue-100: rgb(243, 234, 214);
+  --color-blue-150: rgb(238, 225, 196);
+  --color-blue-200: rgb(233, 216, 179);
+  --color-blue-250: rgb(227, 207, 161);
+  --color-blue-300: rgb(222, 198, 144);
+  --color-blue-350: rgb(217, 189, 126);
+  --color-blue-400: rgb(212, 180, 109);
+  --color-blue-450: rgb(206, 171, 91);
+  --color-blue-500: rgb(201, 162, 74);
+  --color-blue-550: rgb(182, 146, 67);
+  --color-blue-600: rgb(162, 131, 60);
+  --color-blue-650: rgb(143, 115, 54);
+  --color-blue-700: rgb(123, 99, 47);
+  --color-blue-750: rgb(104, 83, 40);
+  --color-blue-800: rgb(84, 68, 33);
+  --color-blue-850: rgb(65, 52, 27);
+  --color-blue-900: rgb(45, 36, 20);
+  --color-blue-950: rgb(26, 20, 13);
+}
+
+// ---------- chrome ----------
+html[data-theme='dark'] {
+  --theme-bg: var(--color-base-900);
+  --theme-input-bg: var(--color-base-850);
+  --theme-text: var(--color-base-100);
+  --theme-border-color: var(--fogo-line-strong);
+}
+html[data-theme='dark'] body {
+  background:
+    radial-gradient(1200px 500px at 85% -10%, rgba(226, 87, 30, 0.1), transparent 60%),
+    var(--color-base-900);
+  background-attachment: fixed;
+}
+::selection {
+  background: var(--fogo-ember);
+  color: var(--fogo-charcoal);
+}
+
+// Headings in the display serif, like the site.
+.doc-header__title,
+.list-header__title,
+.list-header h1,
+.collection-list h1,
+.global-edit h1,
+.render-title,
+.dashboard__label {
+  font-family: var(--fogo-display);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+// Sidebar
+.nav {
+  background: linear-gradient(180deg, var(--color-base-950), var(--color-base-900));
+  border-right: 1px solid var(--fogo-line);
+}
+.nav-group__toggle {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fogo-gold);
+  opacity: 0.85;
+}
+.nav__link {
+  border-radius: 8px;
+  transition: background 160ms, color 160ms;
+}
+.nav__link:hover {
+  background: rgba(239, 230, 216, 0.05);
+}
+.nav__link.active,
+.nav__link[aria-current='page'] {
+  background: linear-gradient(90deg, rgba(226, 87, 30, 0.18), transparent);
+  color: var(--color-base-0);
+}
+.nav__link-indicator {
+  background: var(--fogo-ember);
+  box-shadow: 0 0 10px var(--fogo-ember);
+}
+
+// Header strip
+.app-header {
+  border-bottom: 1px solid var(--fogo-line);
+}
+.app-header--show-bg,
+.app-header__bg {
+  background: rgba(14, 11, 9, 0.78);
+  backdrop-filter: blur(14px);
+}
+
+// Buttons: primary = ember, like the site's call to action.
+.btn--style-primary {
+  --bg-color: var(--fogo-ember);
+  --color: #fff8f0;
+  --hover-bg: #f06a2f;
+  --hover-color: #fff;
+  box-shadow: 0 10px 30px -14px var(--fogo-ember);
+}
+.btn--style-secondary {
+  --hover-bg: rgba(226, 87, 30, 0.12);
+}
+.btn {
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+// Cards, tables, inputs
+.card {
+  background: linear-gradient(180deg, rgba(239, 230, 216, 0.035), rgba(239, 230, 216, 0.01));
+  border: 1px solid var(--fogo-line);
+  border-radius: 14px;
+}
+.card--has-onclick:hover {
+  border-color: rgba(226, 87, 30, 0.45);
+  background: rgba(226, 87, 30, 0.06);
+  box-shadow: 0 20px 40px -24px rgba(226, 87, 30, 0.6);
+}
+.table table {
+  border-collapse: separate;
+}
+.table tbody tr:hover td {
+  background: rgba(239, 230, 216, 0.03);
+}
+.field-type input,
+.field-type textarea,
+.react-select .rs__control {
+  border-radius: 8px;
+}
+.field-type input:focus,
+.field-type textarea:focus,
+.react-select .rs__control--is-focused {
+  border-color: var(--fogo-gold);
+  box-shadow: 0 0 0 3px rgba(201, 162, 74, 0.16);
+}
+.pill--style-success,
+.pill--style-light-success {
+  background: rgba(62, 155, 87, 0.18);
+  color: #8fd3a2;
+}
+
+// Login: ember glow behind the wordmark.
+.template-minimal {
+  background:
+    radial-gradient(60% 50% at 50% 115%, rgba(226, 87, 30, 0.35), transparent 70%),
+    radial-gradient(40% 30% at 50% 0%, rgba(201, 162, 74, 0.08), transparent 70%),
+    var(--color-base-900);
+}
+.fd-logo {
+  text-align: center;
+  color: var(--fogo-bone);
+}
+.fd-logo__mark {
+  font-family: var(--fogo-display);
+  font-size: 36px;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+.fd-logo__mark span {
+  font-size: 0.6em;
+  font-style: italic;
+  color: var(--fogo-gold);
+}
+.fd-logo__sub {
+  margin-top: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--fogo-gold);
+}
+
+// ---------- dashboard (the bento lives in RestaurantBento.tsx) ----------
+.fd {
+  padding: 8px var(--gutter-h, 60px) 80px;
+  color: var(--color-base-100);
+  font-family: var(--font-body);
+}
+.fd-lower {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 14px;
+  margin-top: 14px;
+}
+.fd-eyebrow {
+  margin: 0 0 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--fogo-gold);
+}
+.fd-eyebrow::before {
+  content: '';
+  width: 22px;
+  height: 1px;
+  background: currentColor;
+}
+.fd-link {
+  color: var(--fogo-gold);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.fd-link:hover {
+  color: var(--fogo-bone);
+}
+.fd-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: clamp(16px, 2.4vw, 26px);
+  border-radius: 24px;
+  border: 1px solid var(--fogo-line);
+  background: linear-gradient(180deg, rgba(239, 230, 216, 0.035), rgba(239, 230, 216, 0.008));
+  min-width: 0;
+}
+.fd-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+.fd-card__head h2 {
+  margin: 0;
+  font-family: var(--fogo-display);
+  font-weight: 500;
+  font-size: 1.6rem;
+  line-height: 1.1;
+  color: var(--fogo-bone);
+}
+.fd-empty {
+  margin: 0;
+  color: var(--color-base-400);
+  font-size: 0.86rem;
+}
+
+// table
+.fd-table-wrap {
+  overflow-x: auto;
+}
+.fd-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+}
+.fd-table th {
+  padding: 0 10px 10px;
+  text-align: left;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-base-400);
+  border-bottom: 1px solid var(--fogo-line-strong);
+}
+.fd-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--fogo-line);
+  vertical-align: middle;
+}
+.fd-table td:first-child {
+  display: grid;
+}
+.fd-table td a {
+  color: var(--fogo-bone);
+  font-weight: 600;
+  text-decoration: none;
+}
+.fd-table small {
+  font-size: 0.74rem;
+  color: var(--color-base-400);
+}
+.fd-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.fd-table .end {
+  text-align: right;
+}
+.fd-table tr:last-child td {
+  border-bottom: 0;
+}
+.fd-chip {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.fd-chip--new { color: #ffab7c; background: rgba(226, 87, 30, 0.16); }
+.fd-chip--contacted { color: #e4c06e; background: rgba(201, 162, 74, 0.16); }
+.fd-chip--confirmed { color: #8fd3a2; background: rgba(62, 155, 87, 0.16); }
+.fd-chip--closed { color: var(--color-base-400); background: rgba(239, 230, 216, 0.06); }
+.fd-table .fd-wa {
+  display: inline-flex;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #8fd3a2;
+  box-shadow: inset 0 0 0 1px rgba(62, 155, 87, 0.45);
+}
+.fd-table .fd-wa:hover {
+  background: rgba(62, 155, 87, 0.15);
+}
+
+// quick actions
+.fd-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.fd-actions a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--color-base-100);
+  box-shadow: inset 0 0 0 1px var(--fogo-line);
+  transition: box-shadow 160ms, background 160ms, transform 160ms;
+}
+.fd-actions a:hover {
+  background: rgba(226, 87, 30, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(226, 87, 30, 0.45);
+  transform: translateY(-1px);
+}
+.fd-actions span {
+  width: 22px;
+  text-align: center;
+  color: var(--fogo-gold);
+}
+
+@media (max-width: 1100px) {
+  .fd-lower { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 760px) {
+  .fd { padding: 8px 16px 60px; }
+  .fd-actions { grid-template-columns: 1fr; }
+}

@@ -53,14 +53,22 @@ and re-seed. Media are re-generated from the Instagram exports with `npm run med
 (`MEDIA_SRC=<folder of originals>`); when the agency sends original masters, drop them in and
 re-run for sharper output.
 
-## Deploy (Vercel + Postgres + Blob)
+## Deploy (Vercel + Supabase Postgres + Vercel Blob)
 
-1. Create a Postgres database (Supabase or Neon) and a Vercel Blob store.
-2. In Vercel set `PAYLOAD_SECRET`, `DATABASE_URI`, `BLOB_READ_WRITE_TOKEN`, `NEXT_PUBLIC_SERVER_URL`.
-3. Create the schema: `DATABASE_URI=… npx payload migrate:create initial && DATABASE_URI=… npx payload migrate`
-   (commit the generated `src/migrations`).
-4. Seed once against production: `DATABASE_URI=… BLOB_READ_WRITE_TOKEN=… SEED_ADMIN_EMAIL=… SEED_ADMIN_PASSWORD=… npm run seed`.
-5. Deploy. Every save in the admin refreshes the public pages within seconds.
+Live setup: Vercel project `fogo-de-chao-ventura-sur` (functions in `gru1`, São Paulo), Supabase
+project `fogo-de-chao-ventura-sur` (`sa-east-1`), Blob store `fogo-ventura-sur-media`.
+
+- Every push to the default branch deploys to production. The build runs `payload migrate` first
+  (`npm run vercel-build`), so schema changes ship as migrations: after changing collections run
+  `DATABASE_URI=postgres://x@127.0.0.1/x DATABASE_SCHEMA=payload npm run migrate:create <name>` and commit
+  `src/migrations`.
+- Env vars (Vercel → Settings → Environment Variables): `DATABASE_URI` (Supabase **IPv4 pooler**,
+  role `payload`), `DATABASE_SCHEMA=payload`, `PAYLOAD_SECRET`, `BLOB_READ_WRITE_TOKEN` (added by the
+  Blob store), `NEXT_PUBLIC_SERVER_URL` (update it when a custom domain is added).
+- The CMS uses its own Postgres role and schema (`payload`), separate from Supabase's `public`.
+- Seed a fresh deployment over HTTPS (no direct DB access needed):
+  `SEED_REMOTE_URL=https://<domain> SEED_ADMIN_EMAIL=… SEED_ADMIN_PASSWORD=… npm run seed`
+- Pages render on first visit and are cached; every admin save refreshes them.
 
 ## Admin quick guide (para el equipo del restaurante)
 

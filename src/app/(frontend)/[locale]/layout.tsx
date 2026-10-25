@@ -10,14 +10,16 @@ import { googleFontsHref, ThemeStyle } from '../../../components/layout/ThemeSty
 import { WhatsAppFab } from '../../../components/layout/WhatsAppFab'
 import { RevealObserver } from '../../../components/motion/RevealObserver'
 import { SmoothScroll } from '../../../components/motion/SmoothScroll'
-import { isLocale, localeTags, locales } from '../../../i18n/locales'
+import { isLocale, localeTags } from '../../../i18n/locales'
 import { asMedia, mediaUrl } from '../../../lib/media'
 import { getGlobal, getNavPages } from '../../../lib/payload'
 import { siteUrl } from '../../../lib/seo'
 import { whatsappLink } from '../../../lib/whatsapp'
 import '../styles.css'
 
-export const generateStaticParams = () => locales.map((locale) => ({ locale }))
+// Pages render on first request and are then cached (ISR) and refreshed on
+// every admin save, so deploys never depend on what the database holds.
+export const generateStaticParams = () => []
 
 export default async function LocaleLayout({
   children,

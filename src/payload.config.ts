@@ -36,7 +36,18 @@ const databaseUri = process.env.DATABASE_URI || 'file:./fogo.db'
 // Local development and the seed run on SQLite; production uses Postgres
 // (Supabase/Neon) because serverless hosts have no persistent disk.
 const db = databaseUri.startsWith('postgres')
-  ? postgresAdapter({ pool: { connectionString: databaseUri } })
+  ? postgresAdapter({
+      pool: {
+        connectionString: databaseUri,
+        max: 5,
+        // Managed Postgres (Supabase pooler) encrypts traffic with its own CA.
+        ssl: /localhost|127\.0\.0\.1/.test(databaseUri) ? undefined : { rejectUnauthorized: false },
+      },
+      // Supabase: the CMS gets its own schema and login role (see README).
+      schemaName: process.env.DATABASE_SCHEMA || undefined,
+      migrationDir: path.resolve(dirname, 'migrations'),
+      push: false,
+    })
   : sqliteAdapter({ client: { url: databaseUri } })
 
 export default buildConfig({

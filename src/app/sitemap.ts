@@ -4,7 +4,7 @@ import { localeTags, locales } from '../i18n/locales'
 import { payload } from '../lib/payload'
 import { siteUrl } from '../lib/seo'
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = siteUrl()

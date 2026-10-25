@@ -4,24 +4,16 @@ import { notFound } from 'next/navigation'
 
 import { LazyVideo } from '../../../../../components/motion/LazyVideo'
 import { SplitText } from '../../../../../components/motion/SplitText'
-import { isLocale, locales } from '../../../../../i18n/locales'
+import { isLocale } from '../../../../../i18n/locales'
 import { asMedia, isVideo, mediaUrl, posterUrl } from '../../../../../lib/media'
-import { getCut, getCuts, getGlobal, payload } from '../../../../../lib/payload'
+import { getCut, getCuts, getGlobal } from '../../../../../lib/payload'
 import { buildMetadata } from '../../../../../lib/seo'
 
 type Params = { params: Promise<{ locale: string; slug: string }> }
 
 export const revalidate = 3600
 
-export async function generateStaticParams() {
-  try {
-    const p = await payload()
-    const res = await p.find({ collection: 'cuts', limit: 200, depth: 0 })
-    return locales.flatMap((locale) => res.docs.map((c) => ({ locale, slug: String(c.slug) })))
-  } catch {
-    return []
-  }
-}
+export const generateStaticParams = () => []
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { locale, slug } = await params

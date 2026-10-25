@@ -1,13 +1,17 @@
 /* Seeds the CMS with the graded media (seed/media) and the 6-language copy
-   (src/seed/content.ts). Run with:  npm run seed
+   (src/seed/content.ts).
+
+   Local database:   npm run seed
+   Deployed site:    SEED_REMOTE_URL=https://… SEED_ADMIN_EMAIL=… SEED_ADMIN_PASSWORD=… npm run seed
+
    Refuses to touch a database that already has content unless SEED_FORCE=1. */
 import crypto from 'crypto'
 import fs from 'fs'
 import path from 'path'
-import { getPayload, type CollectionSlug, type GlobalSlug, type Payload } from 'payload'
+import type { CollectionSlug, GlobalSlug } from 'payload'
 
-import config from '../payload.config'
 import { locales, type Locale } from '../i18n/locales'
+import { localClient, remoteClient, type SeedClient } from './clients'
 import { content } from './content'
 import type { L } from './types'
 
@@ -47,75 +51,51 @@ const localize = (value: unknown, locale: Locale, existing?: unknown): unknown =
 
 const others = locales.filter((l) => l !== 'es')
 
-async function createLocalized(payload: Payload, collection: CollectionSlug, data: Record<string, unknown>) {
-  const doc = await payload.create({ collection, locale: 'es', data: localize(data, 'es') as never, depth: 0 })
-  for (const locale of others) {
-    await payload.update({ collection, id: doc.id, locale, data: localize(data, locale, doc) as never, depth: 0 })
-  }
-  return doc
-}
-
-async function updateGlobalLocalized(payload: Payload, slug: GlobalSlug, data: Record<string, unknown>) {
-  const doc = await payload.updateGlobal({ slug, locale: 'es', data: localize(data, 'es') as never, depth: 0 })
-  for (const locale of others) {
-    await payload.updateGlobal({ slug, locale, data: localize(data, locale, doc) as never, depth: 0 })
-  }
-}
-
-async function uploadMedia(payload: Payload) {
-  const ids = new Map<string, number>()
-  const alt = (e: ManifestEntry): L => ({ es: e.altEs, en: e.altEn, pt: e.altEn, fr: e.altEn, de: e.altEn, zh: e.altEn })
-
-  for (const entry of manifest) {
-    let posterId: number | undefined
-    if (entry.type === 'video' && entry.poster) {
-      const poster = await createLocalizedUpload(payload, path.join(root, entry.poster), alt(entry))
-      posterId = poster
+async function seed(client: SeedClient) {
+  const createLocalized = async (collection: CollectionSlug, data: Record<string, unknown>) => {
+    const doc = await client.create(collection, localize(data, 'es') as Record<string, unknown>, 'es')
+    for (const locale of others) {
+      await client.update(collection, doc.id, localize(data, locale, doc) as Record<string, unknown>, locale)
     }
-    const id = await createLocalizedUpload(payload, path.join(root, entry.file), alt(entry), posterId)
-    ids.set(entry.key, id)
+    return doc
+  }
+
+  const updateGlobalLocalized = async (slug: GlobalSlug, data: Record<string, unknown>) => {
+    const doc = await client.updateGlobal(slug, localize(data, 'es') as Record<string, unknown>, 'es')
+    for (const locale of others) {
+      await client.updateGlobal(slug, localize(data, locale, doc) as Record<string, unknown>, locale)
+    }
+  }
+
+  const uploadLocalized = async (filePath: string, alt: L, poster?: number | string) => {
+    const doc = await client.upload(filePath, { alt: alt.es, ...(poster ? { poster } : {}) }, 'es')
+    for (const locale of others) await client.update('media', doc.id, { alt: alt[locale] }, locale)
+    return doc.id
+  }
+
+  const email = process.env.SEED_ADMIN_EMAIL || 'admin@fogodechao-venturasur.com'
+  const password = process.env.SEED_ADMIN_PASSWORD || crypto.randomBytes(9).toString('base64url')
+  const admin = await client.ensureAdmin(email, password)
+  if (admin === 'created') client.log(`Admin user created → ${email} / ${password}  (change it after the first login)`)
+
+  if ((await client.count('cuts')) > 0) {
+    if (process.env.SEED_FORCE !== '1') throw new Error('The database already has content. Re-run with SEED_FORCE=1 to wipe it and seed again.')
+    client.log('SEED_FORCE=1: wiping existing content…')
+    for (const c of ['pages', 'promotions', 'event-packages', 'menu-items', 'menu-categories', 'cuts', 'inquiries', 'media'] as CollectionSlug[]) {
+      await client.wipe(c)
+    }
+  }
+
+  client.log(`Uploading ${manifest.length} media files…`)
+  const media = new Map<string, number | string>()
+  // pt/fr/de/zh visitors get the English alt text rather than Spanish.
+  const alt = (e: ManifestEntry): L => ({ es: e.altEs, en: e.altEn, pt: e.altEn, fr: e.altEn, de: e.altEn, zh: e.altEn })
+  for (const entry of manifest) {
+    const poster = entry.type === 'video' && entry.poster ? await uploadLocalized(path.join(root, entry.poster), alt(entry)) : undefined
+    media.set(entry.key, await uploadLocalized(path.join(root, entry.file), alt(entry), poster))
     process.stdout.write('.')
   }
   process.stdout.write('\n')
-  return ids
-}
-
-async function createLocalizedUpload(payload: Payload, filePath: string, alt: L, poster?: number) {
-  const doc = await payload.create({
-    collection: 'media',
-    locale: 'es',
-    data: { alt: alt.es, ...(poster ? { poster } : {}) },
-    filePath,
-    depth: 0,
-  })
-  for (const locale of others) {
-    await payload.update({ collection: 'media', id: doc.id, locale, data: { alt: alt[locale] }, depth: 0 })
-  }
-  return doc.id as number
-}
-
-async function wipe(payload: Payload) {
-  const collections: CollectionSlug[] = ['pages', 'promotions', 'event-packages', 'menu-items', 'menu-categories', 'cuts', 'inquiries', 'media']
-  for (const collection of collections) {
-    await payload.delete({ collection, where: { id: { exists: true } }, depth: 0 })
-  }
-}
-
-async function run() {
-  const payload = await getPayload({ config })
-
-  const existing = await payload.count({ collection: 'cuts' })
-  if (existing.totalDocs > 0 && process.env.SEED_FORCE !== '1') {
-    payload.logger.error('The database already has content. Re-run with SEED_FORCE=1 to wipe it and seed again.')
-    process.exit(1)
-  }
-  if (existing.totalDocs > 0) {
-    payload.logger.warn('SEED_FORCE=1: wiping existing content…')
-    await wipe(payload)
-  }
-
-  payload.logger.info(`Uploading ${manifest.length} media files…`)
-  const media = await uploadMedia(payload)
   const m = (key?: string) => {
     if (!key) return undefined
     const id = media.get(key)
@@ -123,40 +103,36 @@ async function run() {
     return id
   }
 
-  payload.logger.info('Cuts…')
+  client.log('Cuts…')
   for (const cut of content.cuts) {
-    await createLocalized(payload, 'cuts', { ...cut, image: m(cut.image), video: m(cut.video) })
+    await createLocalized('cuts', { ...cut, image: m(cut.image), video: m(cut.video) })
   }
 
-  payload.logger.info('Menu…')
-  const categoryIds = new Map<string, number>()
+  client.log('Menu…')
+  const categoryIds = new Map<string, number | string>()
   for (const cat of content.menuCategories) {
-    const doc = await createLocalized(payload, 'menu-categories', { ...cat, image: m(cat.image) })
-    categoryIds.set(cat.key, doc.id as number)
+    const doc = await createLocalized('menu-categories', { ...cat, image: m(cat.image) })
+    categoryIds.set(cat.key, doc.id)
   }
-  const itemIdsByCategory = new Map<string, number[]>()
+  const itemIdsByCategory = new Map<string, (number | string)[]>()
   for (const item of content.menuItems) {
     const category = categoryIds.get(item.category)
     if (!category) throw new Error(`Menu item references unknown category "${item.category}"`)
-    const doc = await createLocalized(payload, 'menu-items', { ...item, category, image: m(item.image) })
-    itemIdsByCategory.set(item.category, [...(itemIdsByCategory.get(item.category) ?? []), doc.id as number])
+    const doc = await createLocalized('menu-items', { ...item, category, image: m(item.image) })
+    itemIdsByCategory.set(item.category, [...(itemIdsByCategory.get(item.category) ?? []), doc.id])
   }
 
-  payload.logger.info('Promotions & events…')
+  client.log('Promotions & events…')
   for (const promo of content.promotions) {
-    await createLocalized(payload, 'promotions', { ...promo, image: m(promo.image), video: m(promo.video) })
+    await createLocalized('promotions', { ...promo, image: m(promo.image), video: m(promo.video) })
   }
   for (const pkg of content.eventPackages) {
-    await createLocalized(payload, 'event-packages', {
-      ...pkg,
-      image: m(pkg.image),
-      features: pkg.features.map((text) => ({ text })),
-    })
+    await createLocalized('event-packages', { ...pkg, image: m(pkg.image), features: pkg.features.map((text) => ({ text })) })
   }
 
-  payload.logger.info('Globals…')
+  client.log('Globals…')
   const s = content.settings
-  await updateGlobalLocalized(payload, 'settings', {
+  await updateGlobalLocalized('settings', {
     restaurantName: 'Fogo de Chão',
     branchName: s.branchName,
     status: 'coming-soon',
@@ -173,11 +149,11 @@ async function run() {
     ogImage: m('fire-skewers'),
   })
 
-  await updateGlobalLocalized(payload, 'navigation', content.navigation as unknown as Record<string, unknown>)
+  await updateGlobalLocalized('navigation', content.navigation as unknown as Record<string, unknown>)
 
   const h = content.home
   const barDrinks = [...(itemIdsByCategory.get('bar') ?? []).slice(0, 3), ...(itemIdsByCategory.get('happy') ?? []).slice(0, 1)]
-  await updateGlobalLocalized(payload, 'home', {
+  await updateGlobalLocalized('home', {
     hero: { ...h.hero, introVideo: m('hero-flame'), loopVideo: m('hero-carve') },
     ritual: { enabled: true, heading: h.ritual.heading, beats: h.ritual.beats.map((b) => ({ ...b, video: m(b.video) })) },
     cuts: { enabled: true, ...h.cuts },
@@ -196,29 +172,31 @@ async function run() {
 
   const pg = content.pages
   const header = (p: { media?: string }) => ({ ...p, media: m(p.media) })
-  await updateGlobalLocalized(payload, 'menu-page', header(pg.menu))
-  await updateGlobalLocalized(payload, 'cuts-page', header(pg.cuts))
-  await updateGlobalLocalized(payload, 'week-page', header(pg.week))
-  await updateGlobalLocalized(payload, 'events-page', header(pg.events))
-  await updateGlobalLocalized(payload, 'visit-page', header(pg.visit))
-  await updateGlobalLocalized(payload, 'reserve-page', {
-    ...header(pg.reserve),
-    occasions: pg.reserve.occasions.map((label) => ({ label })),
-  })
+  await updateGlobalLocalized('menu-page', header(pg.menu))
+  await updateGlobalLocalized('cuts-page', header(pg.cuts))
+  await updateGlobalLocalized('week-page', header(pg.week))
+  await updateGlobalLocalized('events-page', header(pg.events))
+  await updateGlobalLocalized('visit-page', header(pg.visit))
+  await updateGlobalLocalized('reserve-page', { ...header(pg.reserve), occasions: pg.reserve.occasions.map((label) => ({ label })) })
 
-  const users = await payload.count({ collection: 'users' })
-  if (users.totalDocs === 0) {
-    const email = process.env.SEED_ADMIN_EMAIL || 'admin@fogodechao-venturasur.com'
-    const password = process.env.SEED_ADMIN_PASSWORD || crypto.randomBytes(9).toString('base64url')
-    await payload.create({ collection: 'users', data: { email, password, name: 'Administrador', role: 'admin' } })
-    payload.logger.info(`Admin user created → ${email} / ${password}  (change it after the first login)`)
+  client.log('Seed complete.')
+}
+
+async function main() {
+  const remote = process.env.SEED_REMOTE_URL
+  let client: SeedClient
+  if (remote) {
+    client = remoteClient(remote)
+  } else {
+    const { getPayload } = await import('payload')
+    const { default: config } = await import('../payload.config')
+    client = localClient(await getPayload({ config }))
   }
-
-  payload.logger.info('Seed complete.')
+  await seed(client)
   process.exit(0)
 }
 
-run().catch((err) => {
-  console.error(err)
+main().catch((err) => {
+  console.error(err instanceof Error ? err.message : err)
   process.exit(1)
 })

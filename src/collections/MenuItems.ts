@@ -28,7 +28,7 @@ export const MenuItems: CollectionConfig = {
     {
       type: 'row',
       fields: [
-        { name: 'price', type: 'number', label: 'Precio (Bs)', min: 0 },
+        { name: 'price', type: 'number', label: 'Precio (Bs)', min: 0, admin: { components: { Cell: '/components/admin/cells/PriceCell' } } },
         {
           name: 'priceNote',
           type: 'text',
@@ -58,7 +58,7 @@ export const MenuItems: CollectionConfig = {
       type: 'checkbox',
       label: 'Disponible',
       defaultValue: true,
-      admin: { position: 'sidebar' },
+      admin: { position: 'sidebar', components: { Cell: '/components/admin/cells/YesNoCell' } },
     },
   ],
 }

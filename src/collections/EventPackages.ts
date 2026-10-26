@@ -17,7 +17,7 @@ export const EventPackages: CollectionConfig = {
       type: 'row',
       fields: [
         { name: 'capacity', type: 'text', label: 'Capacidad', localized: true, admin: { placeholder: '10–40 personas' } },
-        { name: 'priceFrom', type: 'number', label: 'Desde (Bs por persona)', min: 0 },
+        { name: 'priceFrom', type: 'number', label: 'Desde (Bs por persona)', min: 0, admin: { components: { Cell: '/components/admin/cells/PriceCell' } } },
       ],
     },
     {

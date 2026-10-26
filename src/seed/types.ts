@@ -105,7 +105,7 @@ export type SeedContent = {
     footer: { tagline: L; legal: L }
   }
   home: {
-    hero: { eyebrow: L; title: L; subtitle: L; ctaLabel: L; secondaryLabel: L }
+    hero: { eyebrow: L; title: L; ctaLabel: L }
     ritual: { heading: L; beats: { kicker: L; title: L; text: L; video: MediaKey }[] }
     cuts: { eyebrow: L; heading: L; intro: L; hint: L; linkLabel: L }
     market: { eyebrow: L; heading: L; text: L; gallery: { image: MediaKey; caption: L }[]; linkLabel: L }

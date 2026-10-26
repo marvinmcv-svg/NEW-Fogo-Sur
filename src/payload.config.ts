@@ -32,6 +32,9 @@ import { defaultLocale, localeNames, locales } from './i18n/locales'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+// The restaurant team edits content; the raw "API" tab is developer noise.
+const withoutApiTab = <T extends { admin?: object }>(config: T): T => ({ ...config, admin: { ...config.admin, hideAPIURL: true } })
+
 const databaseUri = process.env.DATABASE_URI || 'file:./fogo.db'
 
 // Local development and the seed run on SQLite; production uses Postgres
@@ -86,8 +89,10 @@ export default buildConfig({
     defaultLocale,
     fallback: true,
   },
-  collections: [Pages, Cuts, MenuCategories, MenuItems, Promotions, EventPackages, Media, ReservationRequests, Inquiries, Users],
-  globals: [Home, MenuPage, CutsPage, WeekPage, EventsPage, VisitPage, ReservePage, Settings, Navigation],
+  collections: [Pages, Cuts, MenuCategories, MenuItems, Promotions, EventPackages, Media, ReservationRequests, Inquiries, Users].map(
+    withoutApiTab,
+  ),
+  globals: [Home, MenuPage, CutsPage, WeekPage, EventsPage, VisitPage, ReservePage, Settings, Navigation].map(withoutApiTab),
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || 'dev-only-secret-change-me',
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },

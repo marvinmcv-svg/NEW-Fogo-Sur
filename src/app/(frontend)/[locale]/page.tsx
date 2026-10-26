@@ -71,15 +71,10 @@ export default async function HomePage({ params }: Params) {
       <Hero
         eyebrow={hero?.eyebrow}
         title={<SplitText as="span" className="hero__split" text={heroTitle} lines={splitLines(heroTitle)} reveal={false} />}
-        subtitle={hero?.subtitle}
-        intro={video(hero?.introVideo)}
-        loop={video(hero?.loopVideo)}
+        reels={(hero?.reels ?? []).map(video).filter((v): v is NonNullable<typeof v> => v !== null)}
         ctaLabel={hero?.ctaLabel || ui.reserve}
         ctaHref={`${base}/reservar`}
-        secondaryLabel={hero?.secondaryLabel}
-        secondaryHref={`${base}/menu`}
         countdown={countdown}
-        scrollLabel={ui.scroll}
       />
 
       {ritual?.enabled !== false && ritual?.beats?.length ? (

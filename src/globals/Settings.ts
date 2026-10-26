@@ -2,6 +2,7 @@ import type { GlobalConfig } from 'payload'
 
 import { anyone, isLoggedIn } from '../access'
 import { revalidateGlobal } from '../hooks/revalidate'
+import { brandSocial } from '../lib/social'
 
 const hex = (value: string | null | undefined) =>
   !value || /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(value) ? true : 'Usa un color hexadecimal, ej.: #C9A24A'
@@ -109,10 +110,19 @@ export const Settings: GlobalConfig = {
               name: 'social',
               type: 'group',
               label: 'Redes sociales',
+              admin: {
+                description:
+                  'Las mismas cuentas para las dos sucursales. Pega el enlace del perfil o solo el usuario (ej.: @fogodechao.bo). Vacío = no se muestra.',
+              },
               fields: [
-                { name: 'instagram', type: 'text', label: 'Instagram (URL)' },
-                { name: 'facebook', type: 'text', label: 'Facebook (URL)' },
-                { name: 'tiktok', type: 'text', label: 'TikTok (URL)' },
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'instagram', type: 'text', label: 'Instagram', defaultValue: brandSocial.instagram },
+                    { name: 'facebook', type: 'text', label: 'Facebook', defaultValue: brandSocial.facebook },
+                    { name: 'tiktok', type: 'text', label: 'TikTok', defaultValue: brandSocial.tiktok },
+                  ],
+                },
               ],
             },
           ],

@@ -11,6 +11,7 @@ import path from 'path'
 import type { CollectionSlug, GlobalSlug } from 'payload'
 
 import { locales, type Locale } from '../i18n/locales'
+import { brandSocial } from '../lib/social'
 import { localClient, remoteClient, type SeedClient } from './clients'
 import { content } from './content'
 import type { L } from './types'
@@ -144,6 +145,8 @@ async function seed(client: SeedClient) {
     parkingNote: s.parkingNote,
     whatsapp: '+59177165787',
     whatsappGreeting: s.whatsappGreeting,
+    // Both branches share the accounts of the first restaurant (Boulevard · Ventura Mall).
+    social: brandSocial,
     seoTitle: s.seoTitle,
     seoDescription: s.seoDescription,
     ogImage: m('fire-skewers'),
@@ -154,7 +157,7 @@ async function seed(client: SeedClient) {
   const h = content.home
   const barDrinks = [...(itemIdsByCategory.get('bar') ?? []).slice(0, 3), ...(itemIdsByCategory.get('happy') ?? []).slice(0, 1)]
   await updateGlobalLocalized('home', {
-    hero: { ...h.hero, introVideo: m('hero-flame'), loopVideo: m('hero-carve') },
+    hero: { ...h.hero, reels: [m('hero-fire'), m('hero-skewer'), m('hero-table')] },
     ritual: { enabled: true, heading: h.ritual.heading, beats: h.ritual.beats.map((b) => ({ ...b, video: m(b.video) })) },
     cuts: { enabled: true, ...h.cuts },
     market: {

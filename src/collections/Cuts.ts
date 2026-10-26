@@ -43,7 +43,7 @@ export const Cuts: CollectionConfig = {
       type: 'checkbox',
       label: 'Mostrar en la portada',
       defaultValue: true,
-      admin: { position: 'sidebar' },
+      admin: { position: 'sidebar', components: { Cell: '/components/admin/cells/YesNoCell' } },
     },
     { name: 'tagline', type: 'text', label: 'Frase corta', localized: true },
     { name: 'description', type: 'textarea', label: 'Descripción', localized: true },

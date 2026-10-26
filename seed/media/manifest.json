@@ -691,5 +691,47 @@
     "in": 1.5,
     "altEs": "Llamas de la parrilla",
     "altEn": "Flames from the grill"
+  },
+  {
+    "key": "hero-fire",
+    "type": "video",
+    "file": "video/hero-fire.mp4",
+    "poster": "video/hero-fire.jpg",
+    "width": 720,
+    "height": 1280,
+    "durationSec": 7.2,
+    "bytes": 1568745,
+    "source": "ritual-sparks+ritual-fire",
+    "loop": true,
+    "altEs": "Chispas y brasas al rojo vivo bajo los espetos",
+    "altEn": "Sparks and glowing coals beneath the skewers"
+  },
+  {
+    "key": "hero-skewer",
+    "type": "video",
+    "file": "video/hero-skewer.mp4",
+    "poster": "video/hero-skewer.jpg",
+    "width": 720,
+    "height": 1280,
+    "durationSec": 7.13,
+    "bytes": 1621615,
+    "source": "skewer-spiral+cut-tomahawk+salt-medallions",
+    "loop": true,
+    "altEs": "Cortes en el espeto, sal gruesa y el tomahawk listo para el fuego",
+    "altEn": "Cuts on the skewer, coarse salt and the tomahawk ready for the fire"
+  },
+  {
+    "key": "hero-table",
+    "type": "video",
+    "file": "video/hero-table.mp4",
+    "poster": "video/hero-table.jpg",
+    "width": 720,
+    "height": 1280,
+    "durationSec": 9.03,
+    "bytes": 1640328,
+    "source": "service-table+steak-board",
+    "loop": true,
+    "altEs": "Un gaucho sirve en la mesa; tabla de carne recién cortada",
+    "altEn": "A gaucho serves at the table; a board of freshly carved steak"
   }
 ]

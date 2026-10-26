@@ -138,12 +138,12 @@ export const content: SeedContent = {
   home: {
     hero: {
       eyebrow: l(
-        'Fogo de Chão · Ventura Sur · Santa Cruz',
-        'Fogo de Chão · Ventura Sur · Santa Cruz',
-        'Fogo de Chão · Ventura Sur · Santa Cruz',
-        'Fogo de Chão · Ventura Sur · Santa Cruz',
-        'Fogo de Chão · Ventura Sur · Santa Cruz',
-        'Fogo de Chão · Ventura Sur · 圣克鲁斯',
+        'Ventura Sur · Santa Cruz',
+        'Ventura Sur · Santa Cruz',
+        'Ventura Sur · Santa Cruz',
+        'Ventura Sur · Santa Cruz',
+        'Ventura Sur · Santa Cruz',
+        'Ventura Sur · 圣克鲁斯',
       ),
       title: l(
         'Del fuego / a tu mesa.',
@@ -153,14 +153,6 @@ export const content: SeedContent = {
         'Vom Feuer / an Ihren Tisch.',
         '从炉火 / 到你的餐桌。',
       ),
-      subtitle: l(
-        'El churrasco gaúcho llega al sur de Santa Cruz. Cortes asados a fuego lento y servidos en tu mesa, uno tras otro, hasta que tú digas basta.',
-        'Gaúcho churrasco arrives in the south of Santa Cruz. Cuts slow-roasted over open flame and carved at your table, one after another, until you say when.',
-        'O churrasco gaúcho chega ao sul de Santa Cruz. Cortes assados lentamente no fogo e servidos à sua mesa, um após o outro, até você dizer chega.',
-        'Le churrasco gaúcho s’installe au sud de Santa Cruz. Des pièces rôties lentement au feu de bois, découpées à votre table l’une après l’autre, jusqu’à ce que vous disiez stop.',
-        'Gaúcho-Churrasco kommt in den Süden von Santa Cruz. Langsam über offenem Feuer gegarte Cuts, am Tisch tranchiert – einer nach dem anderen, bis Sie genug sagen.',
-        '巴西南部的高乔烤肉，来到圣克鲁斯南区。明火慢烤的肉品在你桌边现切，一道接一道，直到你说够了为止。',
-      ),
       ctaLabel: l(
         'Reserva tu mesa',
         'Book your table',
@@ -168,14 +160,6 @@ export const content: SeedContent = {
         'Réservez votre table',
         'Tisch reservieren',
         '预订餐位',
-      ),
-      secondaryLabel: l(
-        'Descubre la experiencia',
-        'Discover the experience',
-        'Descubra a experiência',
-        'Découvrir l’expérience',
-        'Das Erlebnis entdecken',
-        '探索用餐体验',
       ),
     },
 

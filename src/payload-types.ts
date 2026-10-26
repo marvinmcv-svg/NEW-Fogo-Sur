@@ -262,7 +262,6 @@ export interface Media {
    * Se muestra mientras el video carga y cuando el visitante prefiere menos movimiento.
    */
   poster?: (number | null) | Media;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -769,7 +768,6 @@ export interface EventPackagesSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   poster?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -920,22 +918,19 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 export interface Home {
   id: number;
   hero: {
+    /**
+     * Corto: una línea pequeña sobre el título (ej.: "Ventura Sur · Santa Cruz").
+     */
     eyebrow?: string | null;
     /**
      * Usa "/" para forzar un salto de línea.
      */
     title: string;
-    subtitle?: string | null;
     /**
-     * Se reproduce una vez al cargar (brasas → llama).
+     * Hasta 3 videos verticales, en orden: fuego → espeto → mesa. En escritorio se ven lado a lado; en el móvil, uno tras otro.
      */
-    introVideo?: (number | null) | Media;
-    /**
-     * Plano principal, vertical, en bucle.
-     */
-    loopVideo?: (number | null) | Media;
+    reels?: (number | Media)[] | null;
     ctaLabel?: string | null;
-    secondaryLabel?: string | null;
   };
   ritual?: {
     enabled?: boolean | null;
@@ -1184,6 +1179,9 @@ export interface Setting {
   whatsappGreeting?: string | null;
   phone?: string | null;
   email?: string | null;
+  /**
+   * Las mismas cuentas para las dos sucursales. Pega el enlace del perfil o solo el usuario (ej.: @fogodechao.bo). Vacío = no se muestra.
+   */
   social?: {
     instagram?: string | null;
     facebook?: string | null;
@@ -1285,11 +1283,8 @@ export interface HomeSelect<T extends boolean = true> {
     | {
         eyebrow?: T;
         title?: T;
-        subtitle?: T;
-        introVideo?: T;
-        loopVideo?: T;
+        reels?: T;
         ctaLabel?: T;
-        secondaryLabel?: T;
       };
   ritual?:
     | T

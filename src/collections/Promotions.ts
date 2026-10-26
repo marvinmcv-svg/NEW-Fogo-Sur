@@ -71,6 +71,6 @@ export const Promotions: CollectionConfig = {
       ],
     },
     { name: 'order', type: 'number', label: 'Orden', defaultValue: 10, admin: { position: 'sidebar' } },
-    { name: 'active', type: 'checkbox', label: 'Activa', defaultValue: true, admin: { position: 'sidebar' } },
+    { name: 'active', type: 'checkbox', label: 'Activa', defaultValue: true, admin: { position: 'sidebar', components: { Cell: '/components/admin/cells/YesNoCell' } } },
   ],
 }

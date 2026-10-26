@@ -5,7 +5,9 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState, type ReactNode } from 'react'
 
 import type { Locale } from '../../i18n/locales'
+import type { SocialLink } from '../../lib/social'
 import { LanguageSwitcher } from './LanguageSwitcher'
+import { SocialIcon } from './SocialIcon'
 
 type NavLink = { label: string; href: string }
 
@@ -16,9 +18,10 @@ type Props = {
   ui: { reserve: string; menu: string; close: string; language: string }
   whatsappHref: string
   address?: string | null
+  socials?: SocialLink[]
 }
 
-export function Header({ locale, brand, links, ui, whatsappHref, address }: Props) {
+export function Header({ locale, brand, links, ui, whatsappHref, address, socials = [] }: Props) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -98,7 +101,20 @@ export function Header({ locale, brand, links, ui, whatsappHref, address }: Prop
           ))}
         </nav>
         <div className="menu__foot">
-          {address ? <p className="menu__address">{address}</p> : null}
+          <div>
+            {address ? <p className="menu__address">{address}</p> : null}
+            {socials.length ? (
+              <ul className="menu__social" aria-label="Redes sociales">
+                {socials.map((s) => (
+                  <li key={s.key}>
+                    <a href={s.href} target="_blank" rel="noopener noreferrer me" aria-label={s.label} title={s.label}>
+                      <SocialIcon network={s.key} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
           <a className="btn btn--yes" href={whatsappHref} target="_blank" rel="noopener noreferrer">
             <span className="btn__dot" aria-hidden="true" />
             WhatsApp

@@ -47,18 +47,22 @@ export const Home: GlobalConfig = {
           name: 'hero',
           label: '1 · El Fuego',
           fields: [
-            text('eyebrow', 'Antetítulo'),
+            text('eyebrow', 'Antetítulo', { description: 'Corto: una línea pequeña sobre el título (ej.: "Ventura Sur · Santa Cruz").' }),
             text('title', 'Título', { required: true, description: 'Usa "/" para forzar un salto de línea.' }),
-            text('subtitle', 'Subtítulo', { textarea: true }),
             {
-              type: 'row',
-              fields: [
-                upload('introVideo', 'Video de entrada', 'Se reproduce una vez al cargar (brasas → llama).'),
-                upload('loopVideo', 'Video en bucle', 'Plano principal, vertical, en bucle.'),
-              ],
+              name: 'reels',
+              label: 'Videos (tríptico)',
+              type: 'upload',
+              relationTo: 'media',
+              hasMany: true,
+              minRows: 1,
+              maxRows: 3,
+              admin: {
+                description:
+                  'Hasta 3 videos verticales, en orden: fuego → espeto → mesa. En escritorio se ven lado a lado; en el móvil, uno tras otro.',
+              },
             },
             text('ctaLabel', 'Texto del botón'),
-            text('secondaryLabel', 'Texto del enlace secundario'),
           ],
         },
         {

@@ -14,6 +14,7 @@ import { isLocale, localeTags } from '../../../i18n/locales'
 import { asMedia, mediaUrl } from '../../../lib/media'
 import { getGlobal, getNavPages } from '../../../lib/payload'
 import { siteUrl } from '../../../lib/seo'
+import { socialLinks } from '../../../lib/social'
 import { whatsappLink } from '../../../lib/whatsapp'
 import '../styles.css'
 
@@ -42,6 +43,7 @@ export default async function LocaleLayout({
   const extraLinks = navPages.map((p) => ({ label: p.title, href: `/${p.slug}` }))
   const favicon = mediaUrl(asMedia(settings.favicon))
   const ui = nav.ui ?? {}
+  const socials = socialLinks(settings)
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -59,6 +61,7 @@ export default async function LocaleLayout({
       addressCountry: 'BO',
     },
     openingHours: (settings.hours ?? []).map((h) => `${h.days} ${h.time}`),
+    sameAs: socials.map((s) => s.href),
   }
 
   return (
@@ -91,6 +94,7 @@ export default async function LocaleLayout({
           }}
           whatsappHref={whatsappHref}
           address={settings.address}
+          socials={socials}
         />
         <SkewerProgress />
         <main id="main" className="main">

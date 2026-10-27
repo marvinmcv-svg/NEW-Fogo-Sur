@@ -734,6 +734,8 @@ html[data-locale='de'] .display {
 }
 
 /* ---------- 1 · hero ---------- */
+/* Desktop: the reels fill the screen side by side, copy over them.
+   Phone: copy on top, the reels in a row below it, each one whole. */
 .hero {
   position: relative;
   height: 180vh;
@@ -747,17 +749,14 @@ html[data-locale='de'] .display {
   overflow: hidden;
   background: var(--charcoal);
 }
-/* Triptych: the three reels stand side by side, separated by thin charcoal seams. */
 .hero__reels {
   position: absolute;
   inset: 0;
+  z-index: 0;
   display: grid;
   grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr));
   gap: 4px;
-  z-index: 0;
 }
-.hero__reels--1 { --n: 1; }
-.hero__reels--2 { --n: 2; }
 .hero__panel {
   position: relative;
   overflow: hidden;
@@ -775,6 +774,7 @@ html[data-locale='de'] .display {
   transform-origin: top;
   transition: transform 1.3s var(--ease);
   transition-delay: calc(0.1s + var(--i) * 0.16s);
+  pointer-events: none;
 }
 .is-loaded .hero__panel::after {
   transform: scaleY(0);
@@ -785,12 +785,6 @@ html[data-locale='de'] .display {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  scale: 1.12;
-  transition: scale 2.4s var(--ease);
-  transition-delay: calc(0.1s + var(--i) * 0.16s);
-}
-.is-loaded .hero__video {
-  scale: 1;
 }
 .hero__vignette {
   position: absolute;
@@ -848,61 +842,52 @@ html[data-locale='de'] .display {
 .hero__countdown .countdown__cells {
   justify-content: flex-end;
 }
-.hero__dots {
-  display: none;
-}
 @media (max-width: 899px) {
   .hero {
-    height: 140svh;
+    height: auto;
+  }
+  .hero__stage {
+    position: relative;
+    height: auto;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 28px;
+    padding: calc(96px + env(safe-area-inset-top)) var(--gutter) 40px;
+    background: radial-gradient(120% 60% at 50% 100%, color-mix(in srgb, var(--ember) 22%, var(--charcoal)) 0%, var(--charcoal) 60%);
+  }
+  .hero__copy,
+  .hero__reels,
+  .hero__countdown {
+    position: relative;
+    inset: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
   }
   .hero__reels {
-    display: block;
+    gap: 8px;
   }
   .hero__panel {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.9s var(--ease);
-  }
-  .hero__panel.is-on {
-    opacity: 1;
+    aspect-ratio: 9 / 16;
+    border-radius: 12px;
+    box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.8);
   }
   .hero__vignette {
-    background: linear-gradient(180deg, rgba(14, 11, 9, 0.6) 0%, rgba(14, 11, 9, 0.1) 30%, rgba(14, 11, 9, 0.2) 50%, rgba(14, 11, 9, 0.94) 100%);
+    display: none;
   }
-  .hero__copy {
-    bottom: calc(14vh + 64px);
+  .hero__title {
+    font-size: clamp(2.8rem, 13vw, 4.4rem);
+  }
+  .hero__cta {
+    margin-top: 1.5rem;
   }
   .hero__countdown {
-    left: var(--gutter);
-    right: auto;
-    bottom: 6vh;
     text-align: left;
   }
   .hero__countdown .countdown__cells {
     justify-content: flex-start;
-  }
-  .hero__dots {
-    position: absolute;
-    z-index: 3;
-    top: calc(76px + env(safe-area-inset-top));
-    left: var(--gutter);
-    right: var(--gutter);
-    display: flex;
-    gap: 6px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  .hero__dots li {
-    flex: 1;
-    height: 2px;
-    border-radius: 2px;
-    background: rgba(239, 230, 216, 0.25);
-    transition: background 0.6s var(--ease);
-  }
-  .hero__dots li.is-on {
-    background: var(--gold);
   }
 }
 
@@ -2687,17 +2672,22 @@ html[data-locale='de'] .display {
   .split__char,
   .hero__eyebrow,
   .hero__cta,
-  .hero__panel::after {
-    transform: scaleY(0) !important;
-  }
   .hero__panel,
   .hero__video {
     opacity: 1 !important;
     transform: none !important;
     clip-path: none !important;
   }
+  .hero__panel::after {
+    transform: scaleY(0) !important;
+  }
   .hero {
     height: 100svh;
+  }
+  @media (max-width: 899px) {
+    .hero {
+      height: auto;
+    }
   }
   .ritual {
     height: auto;

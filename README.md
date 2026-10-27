@@ -28,7 +28,7 @@ SQLite locally; Postgres + Vercel Blob in production.
 | Moment | What it does | Tied to |
 |---|---|---|
 | Ember field | Sparks rise behind dark chapters, faster when you scroll fast | The grill |
-| Hero triptych | Three vertical reels side by side (fire → skewer → table) that drift apart on scroll; one after another on phones | The whole evening, from the fire to your table |
+| Hero triptych | Three vertical reels side by side that drift apart on scroll; one after another on phones | The fire, the cuts, the table |
 | Slice reveal | Media enters through a diagonal wipe | The gaucho's knife angle |
 | Ritual | Pinned sequence: Select → Fire → Carve | The churrasco process |
 | Cuts conveyor | Endless drifting carousel; drag/swipe; cards flip green ↔ red | Rodízio service + the card |
@@ -51,8 +51,8 @@ npm run dev                   # http://localhost:3000  ·  admin: http://localho
 `npm run seed` refuses to overwrite an existing database; use `SEED_FORCE=1 npm run seed` to wipe
 and re-seed. Media are re-generated from the Instagram exports with `npm run media`
 (`MEDIA_SRC=<folder of originals>`); when the agency sends original masters, drop them in and
-re-run for sharper output. The three hero reels are cut from the graded clips with
-`node scripts/hero-reels.mjs`.
+re-run for sharper output. The three hero reels (`seed/media/video/hero-*.mp4`) are Fogo's own reels with the
+logo/promo end cards trimmed off, muted and looped.
 
 ## Deploy (Vercel + Supabase Postgres + Vercel Blob)
 

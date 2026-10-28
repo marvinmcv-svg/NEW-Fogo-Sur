@@ -3,6 +3,7 @@ import * as migration_20261025_032158_blob_storage from './20261025_032158_blob_
 import * as migration_20261025_195426_reservation_requests from './20261025_195426_reservation_requests';
 import * as migration_20261026_141934_hero_triptych from './20261026_141934_hero_triptych';
 import * as migration_20261027_192259_hero_reels_v2 from './20261027_192259_hero_reels_v2';
+import * as migration_20261028_035725_hero_reels_repair from './20261028_035725_hero_reels_repair';
 
 export const migrations = [
   {
@@ -28,6 +29,11 @@ export const migrations = [
   {
     up: migration_20261027_192259_hero_reels_v2.up,
     down: migration_20261027_192259_hero_reels_v2.down,
-    name: '20261027_192259_hero_reels_v2'
+    name: '20261027_192259_hero_reels_v2',
+  },
+  {
+    up: migration_20261028_035725_hero_reels_repair.up,
+    down: migration_20261028_035725_hero_reels_repair.down,
+    name: '20261028_035725_hero_reels_repair'
   },
 ];

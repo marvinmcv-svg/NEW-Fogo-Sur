@@ -23,8 +23,10 @@ const seededSite = async (payload: Payload, req?: Partial<PayloadRequest>) =>
   (await payload.count({ collection: 'cuts', req })).totalDocs > 0
 
 // Uploads the hero reels (each with its poster and alt text in every locale)
-// and returns their media ids, in order.
-async function uploadHeroReels(payload: Payload, req?: Partial<PayloadRequest>) {
+// and returns their media ids, in order. Each upload runs on its own request:
+// the cloud-storage plugin takes the file from `req`, so sharing one request
+// (e.g. a migration's) stores the first file's bytes under every later name.
+async function uploadHeroReels(payload: Payload) {
   const root = path.resolve(process.cwd(), 'seed/media')
   const manifest: Entry[] = JSON.parse(fs.readFileSync(path.join(root, 'manifest.json'), 'utf8'))
   const others = locales.filter((l) => l !== 'es')
@@ -36,10 +38,9 @@ async function uploadHeroReels(payload: Payload, req?: Partial<PayloadRequest>) 
       data: { alt: e.altEs, ...(poster ? { poster } : {}) },
       filePath: path.join(root, file),
       locale: 'es',
-      req,
     })
     for (const locale of others) {
-      await payload.update({ collection: 'media', id: doc.id, data: { alt: altFor(e, locale) }, locale, req })
+      await payload.update({ collection: 'media', id: doc.id, data: { alt: altFor(e, locale) }, locale })
     }
     return doc.id as number
   }
@@ -60,8 +61,29 @@ export async function replaceHeroReels(payload: Payload, req?: Partial<PayloadRe
   // Already on these reels (e.g. a database that ran every migration from scratch).
   const current = (home.hero?.reels ?? []).map((r) => (typeof r === 'object' && r ? r.filename ?? '' : ''))
   if (current.length === HERO_REELS.length && current.every((f, i) => f.startsWith(HERO_REELS[i]))) return
-  const reels = await uploadHeroReels(payload, req)
+  const reels = await uploadHeroReels(payload)
   await payload.updateGlobal({ slug: 'home', data: { hero: { ...home.hero, reels } }, locale: 'es', req })
+}
+
+// Every reel file ever uploaded for the hero (the first triptych and the current one).
+const HERO_FILES = ['hero-fire', 'hero-skewer', 'hero-table', ...HERO_REELS]
+
+// Live repair: the earlier migrations uploaded on a shared request, so every
+// hero "video" in Blob storage holds the same poster image. Delete those media
+// (and their blobs), upload the reels again one request each, point the hero at them.
+export async function repairHeroReels(payload: Payload) {
+  if (!(await seededSite(payload))) return
+  const broken = await payload.find({
+    collection: 'media',
+    where: { or: HERO_FILES.map((key) => ({ filename: { like: key } })) },
+    limit: 100,
+    depth: 0,
+    pagination: false,
+  })
+  for (const doc of broken.docs) await payload.delete({ collection: 'media', id: doc.id })
+  const reels = await uploadHeroReels(payload)
+  const home = await payload.findGlobal({ slug: 'home', depth: 0, locale: 'es' })
+  await payload.updateGlobal({ slug: 'home', data: { hero: { ...home.hero, reels } }, locale: 'es' })
 }
 
 export async function applyHeroTriptych(payload: Payload, req?: Partial<PayloadRequest>) {
@@ -70,7 +92,7 @@ export async function applyHeroTriptych(payload: Payload, req?: Partial<PayloadR
 
   const home = await payload.findGlobal({ slug: 'home', depth: 0, locale: 'es', req })
   if (!home.hero?.reels?.length) {
-    const reels = await uploadHeroReels(payload, req)
+    const reels = await uploadHeroReels(payload)
     await payload.updateGlobal({ slug: 'home', data: { hero: { ...home.hero, reels } }, locale: 'es', req })
   }
 

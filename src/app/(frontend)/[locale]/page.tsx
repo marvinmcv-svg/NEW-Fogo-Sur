@@ -19,6 +19,7 @@ import { asMedia, isVideo, mediaUrl, posterUrl, type MediaRef } from '../../../l
 import { getCuts, getGlobal, getPromotions } from '../../../lib/payload'
 import { buildMetadata } from '../../../lib/seo'
 import { toCutCard, cutLabels, toWeekPromos, directionsUrl, countdownLabels } from '../../../lib/view'
+import { whatsappLink } from '../../../lib/whatsapp'
 import type { Cut, MenuItem } from '../../../payload-types'
 
 type Params = { params: Promise<{ locale: string }> }
@@ -74,6 +75,8 @@ export default async function HomePage({ params }: Params) {
         reels={(hero?.reels ?? []).map(video).filter((v): v is NonNullable<typeof v> => v !== null)}
         ctaLabel={hero?.ctaLabel || ui.reserve}
         ctaHref={`${base}/reservar`}
+        whatsappHref={whatsappLink(settings.whatsapp, settings.whatsappGreeting)}
+        whatsappLabel={ui.reserveWhatsapp || ui.reserve || 'WhatsApp'}
         countdown={countdown}
       />
 

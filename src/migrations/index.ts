@@ -4,6 +4,7 @@ import * as migration_20261025_195426_reservation_requests from './20261025_1954
 import * as migration_20261026_141934_hero_triptych from './20261026_141934_hero_triptych';
 import * as migration_20261027_192259_hero_reels_v2 from './20261027_192259_hero_reels_v2';
 import * as migration_20261028_035725_hero_reels_repair from './20261028_035725_hero_reels_repair';
+import * as migration_20261029_142259_hero_experience_market from './20261029_142259_hero_experience_market';
 
 export const migrations = [
   {
@@ -34,6 +35,11 @@ export const migrations = [
   {
     up: migration_20261028_035725_hero_reels_repair.up,
     down: migration_20261028_035725_hero_reels_repair.down,
-    name: '20261028_035725_hero_reels_repair'
+    name: '20261028_035725_hero_reels_repair',
+  },
+  {
+    up: migration_20261029_142259_hero_experience_market.up,
+    down: migration_20261029_142259_hero_experience_market.down,
+    name: '20261029_142259_hero_experience_market'
   },
 ];

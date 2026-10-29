@@ -164,7 +164,7 @@ async function seed(client: SeedClient) {
     market: {
       enabled: true,
       ...h.market,
-      heroImage: m('market-chandeliers'),
+      heroImage: m('market-table'),
       video: m('market-overhead'),
       gallery: h.market.gallery.map((g) => ({ image: m(g.image), caption: g.caption })),
     },

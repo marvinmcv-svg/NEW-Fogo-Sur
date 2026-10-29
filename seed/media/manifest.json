@@ -32,20 +32,20 @@
     "altEn": "A gaucho carves juicy picanha straight from the skewer"
   },
   {
-    "key": "hero-cortes",
+    "key": "hero-experiencia",
     "type": "video",
-    "file": "video/hero-cortes.mp4",
-    "poster": "video/hero-cortes.jpg",
+    "file": "video/hero-experiencia.mp4",
+    "poster": "video/hero-experiencia.jpg",
     "width": 720,
     "height": 1280,
-    "durationSec": 8.8,
-    "bytes": 1796381,
-    "source": "Reel \"Cortes premium. Tradición brasileña. Experiencia Fogo.\"",
+    "durationSec": 11.6,
+    "bytes": 2444948,
+    "source": "Reel \"El fuego que convierte cada momento en una experiencia\" (sin la fachada ni la placa final)",
     "in": 0,
-    "out": 9.3,
+    "out": 12.1,
     "loop": true,
-    "altEs": "Espetos sobre el fuego, cortes en el espeto y sal gruesa sobre los medallones",
-    "altEn": "Skewers over the fire, cuts on the skewer and coarse salt on the medallions"
+    "altEs": "Cortes al fuego, sal gruesa y un gaucho sirviendo en la mesa",
+    "altEn": "Cuts over the fire, coarse salt and a gaucho serving at the table"
   },
   {
     "key": "hero-esencia",
@@ -463,6 +463,17 @@
     "source": "DcKEsvxCUBc_01",
     "altEs": "Sal gruesa sobre picanha cruda en espetos",
     "altEn": "Coarse salt over raw picanha on skewers"
+  },
+  {
+    "key": "market-table",
+    "type": "photo",
+    "file": "photo/market-table.jpg",
+    "width": 1080,
+    "height": 1350,
+    "bytes": 408404,
+    "source": "Foto cenital de la Mesa del Mercado (enviada por el restaurante)",
+    "altEs": "La Mesa del Mercado vista desde arriba: frutas, quesos, jamón, ensaladas y orquídeas bajo las lámparas doradas",
+    "altEn": "The Market Table from above: fruit, cheeses, ham, salads and orchids under the golden chandeliers"
   },
   {
     "key": "market-chandeliers",

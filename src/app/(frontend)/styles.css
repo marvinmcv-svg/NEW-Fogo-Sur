@@ -842,52 +842,46 @@ html[data-locale='de'] .display {
 .hero__countdown .countdown__cells {
   justify-content: flex-end;
 }
+.hero__cta--wa {
+  display: none;
+}
+.hero__cta--wa svg {
+  flex: none;
+}
+/* Phone: one reel, full screen; a short title and the WhatsApp button. */
 @media (max-width: 899px) {
   .hero {
-    height: auto;
+    height: 100svh;
   }
   .hero__stage {
     position: relative;
-    height: auto;
-    min-height: 100svh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 28px;
-    padding: calc(96px + env(safe-area-inset-top)) var(--gutter) 40px;
-    background: radial-gradient(120% 60% at 50% 100%, color-mix(in srgb, var(--ember) 22%, var(--charcoal)) 0%, var(--charcoal) 60%);
-  }
-  .hero__copy,
-  .hero__reels,
-  .hero__countdown {
-    position: relative;
-    inset: auto;
-    left: auto;
-    right: auto;
-    bottom: auto;
   }
   .hero__reels {
-    gap: 8px;
+    display: block;
   }
   .hero__panel {
-    aspect-ratio: 9 / 16;
-    border-radius: 12px;
-    box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.8);
+    position: absolute;
+    inset: 0;
+  }
+  .hero__panel:not(:first-child),
+  .hero__eyebrow,
+  .hero__countdown,
+  .hero__cta--desk {
+    display: none;
   }
   .hero__vignette {
-    display: none;
+    background: linear-gradient(180deg, rgba(14, 11, 9, 0.55) 0%, rgba(14, 11, 9, 0) 22%, rgba(14, 11, 9, 0) 48%, rgba(14, 11, 9, 0.92) 100%);
+  }
+  .hero__copy {
+    bottom: calc(40px + env(safe-area-inset-bottom));
   }
   .hero__title {
     font-size: clamp(2.8rem, 13vw, 4.4rem);
   }
-  .hero__cta {
-    margin-top: 1.5rem;
-  }
-  .hero__countdown {
-    text-align: left;
-  }
-  .hero__countdown .countdown__cells {
-    justify-content: flex-start;
+  .hero__cta--wa {
+    display: inline-flex;
+    gap: 10px;
+    margin-top: 1.4rem;
   }
 }
 
@@ -1289,7 +1283,7 @@ html[data-locale='de'] .display {
   position: relative;
   background: var(--paper);
   color: var(--ink);
-  padding: clamp(calc(96px * var(--s)), calc(14vw * var(--s)), calc(180px * var(--s))) 0;
+  padding: clamp(calc(80px * var(--s)), calc(11vw * var(--s)), calc(150px * var(--s))) 0;
   overflow: hidden;
 }
 .market .eyebrow {
@@ -1298,67 +1292,134 @@ html[data-locale='de'] .display {
 .market .lede {
   color: var(--ink-dim);
 }
+.market__intro {
+  display: grid;
+  gap: clamp(28px, calc(4vw * var(--s)), 64px);
+  padding: 0 var(--gutter);
+  max-width: var(--max);
+  margin: 0 auto;
+}
 .market__hero {
   position: relative;
   isolation: isolate;
   -webkit-mask-image: -webkit-radial-gradient(white, black);
-  margin: clamp(calc(48px * var(--s)), calc(7vw * var(--s)), calc(100px * var(--s))) var(--gutter) 0;
-  height: clamp(360px, 70vh, 820px);
+  margin: 0;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: 14px;
+  box-shadow: 0 50px 90px -50px rgba(27, 21, 18, 0.65);
 }
 .market__hero img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.market__grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: clamp(calc(12px * var(--s)), calc(2vw * var(--s)), calc(28px * var(--s)));
-  padding: clamp(calc(48px * var(--s)), calc(7vw * var(--s)), calc(120px * var(--s))) var(--gutter) 0;
-  max-width: var(--max);
-  margin: 0 auto;
+.market__chips {
+  list-style: none;
+  margin: calc(28px * var(--s)) 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
-.market__tile {
-  margin: 0;
-  position: relative;
-}
-.market__img {
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  border-radius: 4px;
-  box-shadow: 0 30px 60px -40px rgba(27, 21, 18, 0.6);
-}
-.market__tile figcaption {
-  margin-top: calc(10px * var(--s));
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 1.05rem;
-  color: var(--ink-dim);
-}
-@media (min-width: 900px) {
-  .market__grid {
-    grid-template-columns: repeat(12, 1fr);
-    align-items: start;
-  }
-  .market__tile--0 { grid-column: 1 / span 4; margin-top: 8vh; }
-  .market__tile--1 { grid-column: 6 / span 3; }
-  .market__tile--2 { grid-column: 10 / span 3; margin-top: 14vh; }
-  .market__tile--3 { grid-column: 2 / span 3; margin-top: -4vh; }
-  .market__tile--4 { grid-column: 5 / span 4; margin-top: 10vh; }
-  .market__tile--5 { grid-column: 9 / span 4; margin-top: 2vh; }
-  .market__tile--1 .market__img,
-  .market__tile--3 .market__img { aspect-ratio: 1; }
+.market__chips li {
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--ink) 5%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 14%, transparent);
 }
 .market__link {
-  padding: clamp(calc(48px * var(--s)), calc(6vw * var(--s)), calc(80px * var(--s))) var(--gutter) 0;
-  max-width: var(--max);
-  margin: 0 auto;
+  margin-top: calc(32px * var(--s));
 }
 .market .link-arrow {
   color: color-mix(in srgb, var(--ember) 85%, var(--ink));
+}
+/* Details: a swipeable row on phones, a mosaic on desktop. */
+.market__bento {
+  display: flex;
+  gap: 12px;
+  margin-top: calc(48px * var(--s));
+  padding: 0 var(--gutter) 8px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0 var(--gutter);
+  scrollbar-width: none;
+}
+.market__bento::-webkit-scrollbar {
+  display: none;
+}
+.market__tile {
+  position: relative;
+  flex: 0 0 min(72vw, 320px);
+  margin: 0;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 12px;
+  scroll-snap-align: start;
+  isolation: isolate;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  background: color-mix(in srgb, var(--ink) 8%, var(--paper));
+}
+.market__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.2s var(--ease);
+}
+.market__tile figcaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 40px 16px 14px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1.2;
+  color: #fbf7f0;
+  background: linear-gradient(180deg, transparent, rgba(14, 11, 9, 0.72));
+}
+@media (min-width: 900px) {
+  .market__intro {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    align-items: center;
+  }
+  .market__hero {
+    max-height: 86vh;
+    justify-self: end;
+    width: 100%;
+  }
+  .market__bento {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-rows: clamp(200px, calc(19vw * var(--s)), 300px);
+    gap: clamp(10px, calc(1.2vw * var(--s)), 18px);
+    max-width: var(--max);
+    margin: calc(72px * var(--s)) auto 0;
+    padding: 0 var(--gutter);
+    overflow: visible;
+  }
+  .market__tile {
+    aspect-ratio: auto;
+  }
+  .market__tile:hover .market__img {
+    transform: scale(1.05);
+  }
+  /* Six photos and the video: big photo, tall video, wide closing photo. */
+  .market__bento--7 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .market__bento--7 .market__tile:nth-child(1) { grid-area: 1 / 1 / 3 / 3; }
+  .market__bento--7 .market__tile:nth-child(2) { grid-area: 1 / 3 / 2 / 4; }
+  .market__bento--7 .market__tile:nth-child(3) { grid-area: 1 / 4 / 3 / 5; }
+  .market__bento--7 .market__tile:nth-child(4) { grid-area: 2 / 3 / 3 / 4; }
+  .market__bento--7 .market__tile:nth-child(5) { grid-area: 3 / 1 / 4 / 2; }
+  .market__bento--7 .market__tile:nth-child(6) { grid-area: 3 / 2 / 4 / 3; }
+  .market__bento--7 .market__tile:nth-child(7) { grid-area: 3 / 3 / 4 / 5; }
 }
 
 /* ---------- 5 · the card ---------- */
@@ -1597,6 +1658,54 @@ html[data-locale='de'] .display {
 .leader {
   border-bottom: 1px dotted color-mix(in srgb, var(--bone) 30%, transparent);
   transform: translateY(-5px);
+}
+/* Desktop: one screen. Story and drinks on the left, the clips in a staggered
+   row on the right (the phone keeps its swipeable row and list below). */
+@media (min-width: 900px) {
+  .bar {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    grid-template-areas:
+      'head clips'
+      'drinks clips';
+    grid-template-rows: auto 1fr;
+    column-gap: clamp(32px, calc(5vw * var(--s)), 88px);
+    align-items: start;
+    padding-left: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
+    padding-right: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
+  }
+  .bar__head {
+    grid-area: head;
+    padding: 0;
+    max-width: none;
+    margin: 0;
+  }
+  .bar__clips {
+    grid-area: clips;
+    align-self: center;
+    padding: 0 0 48px;
+    max-width: none;
+    margin: 0;
+  }
+  .bar__clip:nth-child(even) {
+    margin-top: 48px;
+  }
+  .bar__clip figcaption {
+    font-size: 1rem;
+  }
+  .bar__drinks {
+    grid-area: drinks;
+    max-width: none;
+    margin: calc(40px * var(--s)) 0 0;
+    padding: 0;
+    gap: calc(18px * var(--s));
+  }
+  .bar__drink {
+    font-size: clamp(1.25rem, calc(1.6vw * var(--s)), 1.6rem);
+  }
+  .bar__media {
+    max-height: 64vh;
+  }
 }
 
 /* ---------- 7 · week ---------- */
@@ -2684,11 +2793,7 @@ html[data-locale='de'] .display {
   .hero {
     height: 100svh;
   }
-  @media (max-width: 899px) {
-    .hero {
-      height: auto;
-    }
-  }
+
   .ritual {
     height: auto;
   }
@@ -2704,5 +2809,79 @@ html[data-locale='de'] .display {
     grid-area: auto;
     opacity: 1;
     transform: none;
+  }
+}
+
+/* ---------- phone usability ----------
+   Thumbs need ~44px targets and small uppercase labels need ~12px to stay
+   readable; desktop keeps its finer type. */
+@media (max-width: 899px) {
+  .header__brand,
+  .link-arrow,
+  .cut__more,
+  .footer__wa,
+  .footer__link,
+  .footer__list a,
+  .footer__langs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .footer__list,
+  .footer__langs {
+    gap: 0;
+  }
+  .menu-tabs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 0.75rem;
+  }
+  .eyebrow,
+  .lang__code,
+  .cut__more,
+  .footer__label,
+  .package__meta,
+  .field__label,
+  .countdown__label,
+  .week__name,
+  .menu-item__price small {
+    font-size: 0.75rem;
+  }
+  .cut__facts dt,
+  .cut-detail__facts dt,
+  .countdown__unit,
+  .week__today,
+  .week__everyday,
+  .promo__meta,
+  .visit-grid h2,
+  .tag,
+  .conveyor__hint,
+  .service-card__sub,
+  .final-card__brand,
+  .cut__alt {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+  }
+  .footer__langs a {
+    padding: 0 4px;
+  }
+  /* Days without a promotion collapse to a slim row instead of an empty card. */
+  .week__day.is-empty {
+    display: flex;
+    align-items: center;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  .week__day.is-empty .week__name {
+    margin: 0;
+    flex: 1;
+  }
+  .week__day.is-empty .week__ember {
+    margin: 0;
+  }
+  /* Room for the floating WhatsApp button below the last line. */
+  .footer {
+    padding-bottom: calc(96px + env(safe-area-inset-bottom));
   }
 }

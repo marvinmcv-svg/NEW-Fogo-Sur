@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 
+import { WhatsAppIcon } from '../layout/WhatsAppFab'
 import { gsap, ScrollTrigger } from '../motion/gsap'
 import { EmberField } from '../motion/EmberField'
 import { prefersReducedMotion } from '../motion/useReducedMotion'
@@ -15,19 +16,27 @@ type Props = {
   reels: Video[]
   ctaLabel?: string | null
   ctaHref: string
+  whatsappHref: string
+  whatsappLabel: string
   countdown?: ReactNode
 }
 
 const DESKTOP = '(min-width: 900px)'
 
-// Chapter 1. Every reel is always on screen and always playing: on desktop
-// they fill the screen side by side; on a phone the title sits on top and the
-// reels stand in a row below it, each one whole (9:16, nothing cropped away).
-export function Hero({ eyebrow, title, reels, ctaLabel, ctaHref, countdown }: Props) {
+// Chapter 1. Desktop: every reel side by side, full screen, always playing.
+// Phone: only the first reel, full screen, with the title and one button
+// that opens WhatsApp to book. The other reels are never downloaded there.
+export function Hero({ eyebrow, title, reels, ctaLabel, ctaHref, whatsappHref, whatsappLabel, countdown }: Props) {
   const root = useRef<HTMLElement>(null)
+  const [desktop, setDesktop] = useState(false)
 
   useEffect(() => {
     document.documentElement.classList.add('is-loaded')
+    const mq = window.matchMedia(DESKTOP)
+    const sync = () => setDesktop(mq.matches)
+    sync()
+    mq.addEventListener('change', sync)
+    return () => mq.removeEventListener('change', sync)
   }, [])
 
   // Autoplay is only a request: browsers can refuse it (battery saver, data
@@ -36,9 +45,9 @@ export function Hero({ eyebrow, title, reels, ctaLabel, ctaHref, countdown }: Pr
   useEffect(() => {
     const el = root.current
     if (!el) return
-    const videos = [...el.querySelectorAll<HTMLVideoElement>('video')]
+    const videos = () => [...el.querySelectorAll<HTMLVideoElement>('video')].filter((v) => v.getAttribute('src'))
     const playAll = () => {
-      for (const v of videos) {
+      for (const v of videos()) {
         v.muted = true
         if (v.paused) void v.play().catch(() => {})
       }
@@ -57,7 +66,7 @@ export function Hero({ eyebrow, title, reels, ctaLabel, ctaHref, countdown }: Pr
       document.removeEventListener('visibilitychange', onVisible)
       for (const e of events) window.removeEventListener(e, playAll)
     }
-  }, [reels])
+  }, [reels, desktop])
 
   useEffect(() => {
     const el = root.current
@@ -82,29 +91,19 @@ export function Hero({ eyebrow, title, reels, ctaLabel, ctaHref, countdown }: Pr
   return (
     <section ref={root} className="hero" id="fuego" data-chapter={eyebrow || 'Fogo'}>
       <div className="hero__stage">
-        <EmberField density={3} className="hero__embers" />
-
-        <div className="hero__copy">
-          {eyebrow ? <p className="eyebrow hero__eyebrow">{eyebrow}</p> : null}
-          <h1 className="hero__title">{title}</h1>
-          <Link href={ctaHref} className="btn btn--yes hero__cta">
-            <span className="btn__dot" aria-hidden="true" />
-            {ctaLabel}
-          </Link>
-        </div>
-
         <div className="hero__reels" style={{ ['--n' as string]: Math.max(reels.length, 1) }}>
           {reels.map((r, i) => (
             <div key={r.src} className="hero__panel" style={{ ['--i' as string]: i }}>
               <video
                 className="hero__video"
-                src={r.src}
-                poster={r.poster}
+                // Only the first reel exists on a phone; the rest load on desktop.
+                src={i === 0 || desktop ? r.src : undefined}
+                poster={i === 0 || desktop ? r.poster : undefined}
                 muted
                 autoPlay
                 loop
                 playsInline
-                preload="auto"
+                preload={i === 0 || desktop ? 'auto' : 'none'}
                 disablePictureInPicture
                 aria-hidden="true"
               />
@@ -112,6 +111,20 @@ export function Hero({ eyebrow, title, reels, ctaLabel, ctaHref, countdown }: Pr
           ))}
         </div>
         <div className="hero__vignette" aria-hidden="true" />
+        <EmberField density={3} className="hero__embers" />
+
+        <div className="hero__copy">
+          {eyebrow ? <p className="eyebrow hero__eyebrow">{eyebrow}</p> : null}
+          <h1 className="hero__title">{title}</h1>
+          <Link href={ctaHref} className="btn btn--yes hero__cta hero__cta--desk">
+            <span className="btn__dot" aria-hidden="true" />
+            {ctaLabel}
+          </Link>
+          <a href={whatsappHref} className="btn btn--yes hero__cta hero__cta--wa" target="_blank" rel="noopener noreferrer">
+            <WhatsAppIcon size={20} />
+            {whatsappLabel}
+          </a>
+        </div>
 
         {countdown ? <div className="hero__countdown">{countdown}</div> : null}
       </div>

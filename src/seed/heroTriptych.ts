@@ -11,7 +11,7 @@ import { locales, type Locale } from '../i18n/locales'
 import { brandSocial } from '../lib/social'
 
 // The hero's reels, in order (keys in seed/media/manifest.json).
-export const HERO_REELS = ['hero-cortes', 'hero-esencia', 'hero-rodizio']
+export const HERO_REELS = ['hero-experiencia', 'hero-esencia', 'hero-rodizio']
 
 // The first seed's eyebrow led with the brand name the header already shows.
 const OLD_EYEBROW = /^Fogo de Chão · (?=Ventura Sur · )/
@@ -22,17 +22,20 @@ type Entry = { key: string; file: string; poster?: string; altEs: string; altEn:
 const seededSite = async (payload: Payload, req?: Partial<PayloadRequest>) =>
   (await payload.count({ collection: 'cuts', req })).totalDocs > 0
 
-// Uploads the hero reels (each with its poster and alt text in every locale)
-// and returns their media ids, in order. Each upload runs on its own request:
-// the cloud-storage plugin takes the file from `req`, so sharing one request
-// (e.g. a migration's) stores the first file's bytes under every later name.
-async function uploadHeroReels(payload: Payload) {
+// Uploads one seed media entry (a photo, or a video with its poster) with its
+// alt text in every locale and returns its id. Every create/update runs on its
+// own request: the cloud-storage plugin remembers the first file of a request
+// and re-uploads it on later changes made on that request, so sharing one
+// request (e.g. a migration's) stored the first file under every later name.
+async function uploadSeedMedia(payload: Payload, key: string) {
   const root = path.resolve(process.cwd(), 'seed/media')
   const manifest: Entry[] = JSON.parse(fs.readFileSync(path.join(root, 'manifest.json'), 'utf8'))
+  const e = manifest.find((m) => m.key === key)
+  if (!e) throw new Error(`seed/media/manifest.json has no "${key}"`)
   const others = locales.filter((l) => l !== 'es')
-  const altFor = (e: Entry, l: Locale) => (l === 'es' ? e.altEs : e.altEn)
+  const altFor = (l: Locale) => (l === 'es' ? e.altEs : e.altEn)
 
-  const upload = async (file: string, e: Entry, poster?: number) => {
+  const upload = async (file: string, poster?: number) => {
     const doc = await payload.create({
       collection: 'media',
       data: { alt: e.altEs, ...(poster ? { poster } : {}) },
@@ -40,19 +43,35 @@ async function uploadHeroReels(payload: Payload) {
       locale: 'es',
     })
     for (const locale of others) {
-      await payload.update({ collection: 'media', id: doc.id, data: { alt: altFor(e, locale) }, locale })
+      await payload.update({ collection: 'media', id: doc.id, data: { alt: altFor(locale) }, locale })
     }
     return doc.id as number
   }
 
-  const reels: number[] = []
+  const poster = e.poster ? await upload(e.poster) : undefined
+  return upload(e.file, poster)
+}
+
+// The hero reels, in order, uploading each one only if the library lacks it.
+async function heroReelIds(payload: Payload) {
+  const ids: number[] = []
   for (const key of HERO_REELS) {
-    const e = manifest.find((m) => m.key === key)
-    if (!e) throw new Error(`seed/media/manifest.json has no "${key}"`)
-    const poster = e.poster ? await upload(e.poster, e) : undefined
-    reels.push(await upload(e.file, e, poster))
+    const found = await payload.find({
+      collection: 'media',
+      where: { and: [{ filename: { like: key } }, { mimeType: { like: 'video' } }] },
+      sort: '-createdAt',
+      limit: 1,
+      depth: 0,
+    })
+    ids.push((found.docs[0]?.id as number | undefined) ?? (await uploadSeedMedia(payload, key)))
   }
-  return reels
+  return ids
+}
+
+const uploadHeroReels = async (payload: Payload) => {
+  const ids: number[] = []
+  for (const key of HERO_REELS) ids.push(await uploadSeedMedia(payload, key))
+  return ids
 }
 
 export async function replaceHeroReels(payload: Payload, req?: Partial<PayloadRequest>) {
@@ -84,6 +103,20 @@ export async function repairHeroReels(payload: Payload) {
   const reels = await uploadHeroReels(payload)
   const home = await payload.findGlobal({ slug: 'home', depth: 0, locale: 'es' })
   await payload.updateGlobal({ slug: 'home', data: { hero: { ...home.hero, reels } }, locale: 'es' })
+}
+
+// Hero gets the "experiencia" reel first (desktop left panel, the only one on a
+// phone); the Market Table gets its new overhead photo (hero_reels_v4).
+export async function applyHeroExperience(payload: Payload) {
+  if (!(await seededSite(payload))) return
+  const reels = await heroReelIds(payload)
+  const marketImage = await uploadSeedMedia(payload, 'market-table')
+  const home = await payload.findGlobal({ slug: 'home', depth: 0, locale: 'es' })
+  await payload.updateGlobal({
+    slug: 'home',
+    data: { hero: { ...home.hero, reels }, market: { ...home.market, heroImage: marketImage } },
+    locale: 'es',
+  })
 }
 
 export async function applyHeroTriptych(payload: Payload, req?: Partial<PayloadRequest>) {

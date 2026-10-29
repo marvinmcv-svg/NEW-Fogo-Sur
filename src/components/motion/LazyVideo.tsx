@@ -2,8 +2,6 @@
 
 import { useEffect, useRef } from 'react'
 
-import { prefersReducedMotion } from './useReducedMotion'
-
 type Props = {
   src: string
   poster?: string
@@ -14,15 +12,16 @@ type Props = {
   eager?: boolean
 }
 
-// Muted inline video that only plays while on screen. Under reduced motion it
-// stays on its poster frame.
+// Muted inline video that only plays while on screen. It plays under reduced
+// motion too: these are short silent loops of the food and the room, and many
+// desktops (e.g. Windows with animation effects off) report reduced motion,
+// which left every section video frozen on its first frame there.
 export function LazyVideo({ src, poster, className, loop = true, label, onEnded, eager }: Props) {
   const ref = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     const video = ref.current
     if (!video) return
-    if (prefersReducedMotion()) return
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {

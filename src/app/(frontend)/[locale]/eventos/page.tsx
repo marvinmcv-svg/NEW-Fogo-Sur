@@ -4,7 +4,7 @@ import { InquiryForm } from '../../../../components/ui/InquiryForm'
 import { PageHeader } from '../../../../components/ui/PageHeader'
 import { isLocale } from '../../../../i18n/locales'
 import { formatPrice } from '../../../../lib/format'
-import { asMedia, mediaUrl } from '../../../../lib/media'
+import { asMedia, isVideo, mediaUrl, posterUrl } from '../../../../lib/media'
 import { pageMetadata } from '../../../../lib/pageMeta'
 import { getEventPackages, getGlobal } from '../../../../lib/payload'
 
@@ -29,7 +29,7 @@ export default async function EventsPage({ params }: { params: Promise<{ locale:
               <article key={p.id} className="package" data-reveal="rise" style={{ ['--i' as string]: i }}>
                 {img ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={mediaUrl(img, 'card')} alt={img.alt} loading="lazy" />
+                  <img src={isVideo(img) ? posterUrl(img) : mediaUrl(img, 'card')} alt={img.alt} loading="lazy" />
                 ) : (
                   <div />
                 )}

@@ -1,7 +1,7 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 type Chapter = { id: string; label: string }
 
@@ -12,16 +12,20 @@ export function SkewerProgress() {
   const pathname = usePathname()
   const [chapters, setChapters] = useState<Chapter[]>([])
   const [active, setActive] = useState(-1)
-  const [progress, setProgress] = useState(0)
+  const fill = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
     const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-chapter]'))
     setChapters(sections.map((s) => ({ id: s.id, label: s.dataset.chapter || '' })))
     if (!sections.length) return
 
-    const onScroll = () => {
+    // Measured once per frame at most, and the fill is written to the DOM
+    // directly so scrolling never re-renders the nav (only a chapter change does).
+    let raf = 0
+    const measure = () => {
+      raf = 0
       const max = document.documentElement.scrollHeight - window.innerHeight
-      setProgress(max > 0 ? window.scrollY / max : 0)
+      if (fill.current) fill.current.style.transform = `scaleY(${max > 0 ? window.scrollY / max : 0})`
       const mid = window.innerHeight * 0.5
       let current = -1
       sections.forEach((s, i) => {
@@ -29,10 +33,14 @@ export function SkewerProgress() {
       })
       setActive(current)
     }
-    onScroll()
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(measure)
+    }
+    onScroll() // next frame, once the skewer itself has rendered
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onScroll)
     return () => {
+      cancelAnimationFrame(raf)
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
     }
@@ -51,7 +59,7 @@ export function SkewerProgress() {
     <nav className="skewer" aria-label="Capítulos">
       <span className="skewer__handle" aria-hidden="true" />
       <span className="skewer__rod" aria-hidden="true">
-        <span className="skewer__fill" style={{ transform: `scaleY(${progress})` }} />
+        <span ref={fill} className="skewer__fill" style={{ transform: 'scaleY(0)' }} />
       </span>
       <ol className="skewer__cuts">
         {chapters.map((c, i) => (

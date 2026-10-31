@@ -10,11 +10,14 @@ import { prefersReducedMotion } from '../motion/useReducedMotion'
 export type RitualBeat = { kicker?: string | null; title: string; text?: string | null; src?: string; poster?: string }
 
 // Chapter 2. A sticky stage that is ~100vh of scroll per beat. The active
-// beat's video slices in diagonally (the angle of the gaucho's knife).
+// beat's video is carved in like a slice off the espeto: the window slides
+// over while the pane inside counter-moves, so the picture stays put.
+// Transforms only; a diagonal clip-path (or a skewed clip) over playing
+// video halved the frame rate.
 export function Ritual({ heading, beats, chapter }: { heading?: string | null; beats: RitualBeat[]; chapter: string }) {
   const root = useRef<HTMLElement>(null)
+  const bar = useRef<HTMLSpanElement>(null)
   const [active, setActive] = useState(0)
-  const [progress, setProgress] = useState(0)
 
   useEffect(() => {
     const el = root.current
@@ -23,8 +26,10 @@ export function Ritual({ heading, beats, chapter }: { heading?: string | null; b
       trigger: el,
       start: 'top top',
       end: 'bottom bottom',
+      // The bar is written straight to the DOM: re-rendering the chapter on
+      // every scroll frame made the pinned videos stutter.
       onUpdate: (self) => {
-        setProgress(self.progress)
+        if (bar.current) bar.current.style.transform = `scaleX(${self.progress})`
         setActive(Math.min(beats.length - 1, Math.floor(self.progress * beats.length * 0.999)))
       },
     })
@@ -43,7 +48,13 @@ export function Ritual({ heading, beats, chapter }: { heading?: string | null; b
         <div className="ritual__media">
           {beats.map((b, i) => (
             <div key={i} className={`ritual__frame ${i === active ? 'is-active' : ''} ${i < active ? 'is-past' : ''}`}>
-              {b.src ? <LazyVideo src={b.src} poster={b.poster} className="ritual__video" /> : null}
+              {/* Frames are stacked: only the one on top (and the one it is
+                  wiping over) needs to be decoding. */}
+              <div className="ritual__pane">
+                {b.src ? (
+                  <LazyVideo src={b.src} poster={b.poster} className="ritual__video" active={i === active || i === active - 1} />
+                ) : null}
+              </div>
             </div>
           ))}
           <div className="ritual__shade" aria-hidden="true" />
@@ -67,7 +78,7 @@ export function Ritual({ heading, beats, chapter }: { heading?: string | null; b
             ))}
           </ol>
           <div className="ritual__progress" aria-hidden="true">
-            <span style={{ transform: `scaleX(${progress})` }} />
+            <span ref={bar} style={{ transform: 'scaleX(0)' }} />
           </div>
         </div>
       </div>

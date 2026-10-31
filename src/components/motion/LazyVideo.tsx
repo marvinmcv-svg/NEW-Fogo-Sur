@@ -10,23 +10,27 @@ type Props = {
   label?: string
   onEnded?: () => void
   eager?: boolean
+  active?: boolean // false = keep it paused even while on screen (e.g. a covered layer)
 }
 
 // Muted inline video that only plays while on screen. It plays under reduced
 // motion too: these are short silent loops of the food and the room, and many
 // desktops (e.g. Windows with animation effects off) report reduced motion,
 // which left every section video frozen on its first frame there.
-export function LazyVideo({ src, poster, className, loop = true, label, onEnded, eager }: Props) {
+export function LazyVideo({ src, poster, className, loop = true, label, onEnded, eager, active = true }: Props) {
   const ref = useRef<HTMLVideoElement>(null)
+  const activeRef = useRef(active)
+  const visibleRef = useRef(false)
 
   useEffect(() => {
     const video = ref.current
     if (!video) return
     const io = new IntersectionObserver(
       ([entry]) => {
+        visibleRef.current = entry.isIntersecting
         if (entry.isIntersecting) {
           if (!video.src) video.src = src
-          void video.play().catch(() => {})
+          if (activeRef.current) void video.play().catch(() => {})
         } else {
           video.pause()
         }
@@ -37,6 +41,14 @@ export function LazyVideo({ src, poster, className, loop = true, label, onEnded,
     io.observe(video.parentElement ?? video)
     return () => io.disconnect()
   }, [src])
+
+  useEffect(() => {
+    activeRef.current = active
+    const video = ref.current
+    if (!video || !visibleRef.current) return
+    if (active) void video.play().catch(() => {})
+    else video.pause()
+  }, [active])
 
   return (
     <video

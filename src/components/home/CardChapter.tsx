@@ -106,7 +106,16 @@ export function CardChapter({ eyebrow, heading, text, yes, no, video, flipLabel,
           </button>
           <p className="card-chapter__explain" aria-live="polite">
             <span className={`card-chapter__dot ${side === 'no' ? 'is-no' : ''}`} aria-hidden="true" />
-            {current.text}
+            {/* Both texts share one cell so the block keeps the taller one's
+                height: swapping them used to shift the page on every flip. */}
+            <span className="card-chapter__texts">
+              <span className={side === 'yes' ? '' : 'is-off'} aria-hidden={side !== 'yes'}>
+                {yes.text}
+              </span>
+              <span className={side === 'no' ? '' : 'is-off'} aria-hidden={side !== 'no'}>
+                {no.text}
+              </span>
+            </span>
           </p>
         </div>
       </div>
